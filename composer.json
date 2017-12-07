@@ -1,22 +1,16 @@
 {
-    "name": "symfony/skeleton",
     "type": "project",
     "license": "proprietary",
-    "description": "Project description",
     "require": {
         "php": "^7.1.3",
-        "sensio/framework-extra-bundle": "^5.1",
-        "symfony/asset": "^4.0",
         "symfony/console": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
         "symfony/lts": "^4@dev",
-        "symfony/twig-bundle": "^4.0",
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
-        "symfony/dotenv": "^4.0",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/dotenv": "^4.0"
     },
     "config": {
         "preferred-install": {
@@ -51,7 +45,7 @@
     },
     "extra": {
         "symfony": {
-            "id": "01C0R0RYSCEP1KDR2378AN37KD",
+            "id": "01C0RHBV8MWHXVHY4R7KD9Z923",
             "allow-contrib": false
         }
     }
