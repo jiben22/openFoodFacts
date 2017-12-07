@@ -11,4 +11,4 @@ app_lucky_number:
 
 app_product_information:
     path: /produit/information
-    controller: App\Controller\ProductController:Product:information
+    controller: App\Controller\ProductController::information
