@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product;
 
 class ProductController extends Controller
-{
+{    
     public function information(Request $request)
     {
         // We retrieve our id route parameter

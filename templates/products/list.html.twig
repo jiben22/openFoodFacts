@@ -7,8 +7,7 @@
   {{ parent() }}
 {% endblock %}
 
-{% block stylesheets %}
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
   <div class="col-lg-9">
@@ -33,17 +32,19 @@
           </thead>
           <tbody>
             {% for product in list_products %}
-              <tr>
-                <td>
-                  {{ product.getProductName }}
-                </td>
-                <td>
-                  {{ product.getLastModifiedDatetime|date('d-m-Y H:i') }}
-                </td>
-                <td>
-                  {{ product.getServingSize }}
-                </td>
-              </tr>
+                <tr>
+                  <td>
+                    <a href="{{ path('app_product_information', {'id': product.getId}) }}">
+                    {{ product.getProductName }}
+                  </a>
+                  </td>
+                  <td>
+                    {{ product.getLastModifiedDatetime|date('d-m-Y H:i') }}
+                  </td>
+                  <td>
+                    {{ product.getServingSize }}
+                  </td>
+                </tr>
             {% endfor %}
           </tbody>
         </table>
