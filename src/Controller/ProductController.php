@@ -2,29 +2,6 @@
 // src/Controller/ProductController.php
 namespace App\Controller;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-use Symfony\Component\HttpFoundation\Request;
->>>>>>> fs1#2
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
-use App\Entity\Product;
-
-class ProductController extends Controller
-{
-    public function information(Request $request)
-    {
-<<<<<<< HEAD
-        // renders templates/product_information/index.html
-        return $this->render('products/information.html.twig');
-=======
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,8 +17,6 @@ class ProductController extends Controller
 {
     public function information(Request $request)
     {
-=======
->>>>>>> fs1#2
         // We retrieve our id route parameter
         $id = $request->attributes->get('id');
         // We retrieve data product
@@ -145,9 +120,5 @@ class ProductController extends Controller
             ->getQuery();
 
         return $list_products = $qb->getResult();
-<<<<<<< HEAD
->>>>>>> fs1#1
-=======
->>>>>>> fs1#2
     }
 }
