@@ -4,8 +4,13 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product;
 
 class ProductController extends Controller
@@ -50,30 +55,70 @@ class ProductController extends Controller
         $product->setIngredientsFromPalmOil(0);
         $product->setIngredientsThatMayBeFromPalmOil(0);
 
-        // On peut ne pas définir ni la date ni la publication,
-        // car ces attributs sont définis automatiquement dans le constructeur
-
-        // On récupère l'EntityManager
+        // We retrieve the EntityManager
         $em = $this->getDoctrine()->getManager();
 
-        // Étape 1 : On « persiste » l'entité
+        // Step 1 : On « persiste » l'entité
         $em->persist($product);
 
-        // Étape 2 : On « flush » tout ce qui a été persisté avant
+        // Step 2 : We « flush » all that persist before
         $em->flush();
     }
 
 
-    public function search()
+    public function search(Request $request)
     {
-        return $this->render('products/search.html.twig');
-    }
+        $product = new Product();
 
-    public function form_search()
-    {
-        $form = $this->createFormBuilder($task)
-            ->add('product_name', TextType::class)
+        // We create the form with createFormBuilder
+        $form = $this->createFormBuilder($product)
+            ->add('product_name', TextType::class, array('label' => 'Nom du produit'))
             ->add('save', SubmitType::class, array('label' => 'Rechercher'))
             ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$product` variable has also been updated
+            $product = $form->getData();
+            $product_name = $product->getProductName();
+
+            // We call function to make a statement
+            $list_products = $this->search_list_products($product_name);
+
+            return $this->render('products/list.html.twig', array(
+                'list_products' => $list_products,
+            ));
+        }
+
+
+        return $this->render('products/search.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @param $product_name
+     * @return Product[]
+     */
+    public function search_list_products($product_name)
+    {
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+            ->select('p.id')
+            ->from('App:Product', 'p')
+            ->where('p.product_name LIKE  :product_name')
+            ->setParameter('product_name', $product_name)
+            //%*% the name of product must contents the word
+            // product_name into the row
+            ->setParameter('product_name', '%My Products%')
+            ->orderBy('p.product_name', 'ASC')
+            ->getQuery();
+
+        return $list_products = $qb->getResult();
     }
 }
