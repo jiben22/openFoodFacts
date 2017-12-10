@@ -8,100 +8,47 @@
 {% endblock %}
 
 {% block stylesheets %}
-  <!-- Custom styles for this template -->
-  {# FEUILLE DE STYLE NON RECONNUE #}
-  {# <link href="css/shop-item.css" rel="stylesheet"> #}
 {% endblock %}
 
 {% block body %}
-  <!-- Page Content -->
-  <div class="container">
+  <div class="col-lg-9">
 
-    <div class="row">
-
-      <div class="col-lg-3">
-        <h1 class="my-4">Image OpenFoodFacts</h1>
-        {#
-          <div class="list-group">
-            <a href="#" class="list-group-item active">Category 1</a>
-            <a href="#" class="list-group-item">Category 2</a>
-            <a href="#" class="list-group-item">Category 3</a>
-          </div>
-          #}
-        <p class="card-text">
-          Open Food Facts répertorie les produits alimentaires du monde entier.
-        </p>
-        <div class="card mt-4">
-          <h4>Ajouter un produit</h4>
-          <h4>Se connecter</h4>
-        </div>
+    <div class="card mt-4">
+      <div class="card-body">
+        <h3 class="card-title"></h3>
+        <h4>Liste produits</h4>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>
+                Nom du produit
+              </th>
+              <th>
+                Dernière modification
+              </th>
+              <th>
+                Portion
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in list_products %}
+              <tr>
+                <td>
+                  {{ product.getProductName }}
+                </td>
+                <td>
+                  {{ product.getLastModifiedDatetime|date('d-m-Y H:i') }}
+                </td>
+                <td>
+                  {{ product.getServingSize }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-      <!-- /.col-lg-3 -->
-
-      <div class="col-lg-9">
-
-        <div class="card mt-4">
-          <div class="card-body">
-            <h3 class="card-title"></h3>
-            <h4>Liste produits</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Nom du produit
-                  </th>
-                  <th>
-                    Dernière modification
-                  </th>
-                  <th>
-                    Portion
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for product in list_products %}
-                  <tr>
-                    <td>
-                      {{ product.getProductName }}
-                    </td>
-                    <td>
-                      {#{ product.getLastModifiedDatetime }#}
-                    </td>
-                    <td>
-                      {#{ product.getServingSize }#}
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <!-- /.card -->
-        {#
-          <div class="card card-outline-secondary my-4">
-            <div class="card-header">
-              Product Reviews
-            </div>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-              <hr>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-              <hr>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-              <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-              <hr>
-              <a href="#" class="btn btn-success">Leave a Review</a>
-            </div>
-          </div>
-          <!-- /.card -->
-          #}
-      </div>
-      <!-- /.col-lg-9 -->
-
     </div>
-
   </div>
-  <!-- /.container -->
+  <!-- /.col-lg-9 -->
 {% endblock %}

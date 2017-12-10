@@ -86,9 +86,6 @@ class ProductController extends Controller
             // We call function to make a statement
             $list_products = $this->search_list_products($product_name);
 
-            //TEST
-            var_dump($list_products);
-
             return $this->render('products/list.html.twig', array(
                 'list_products' => $list_products,
             ));
@@ -102,7 +99,7 @@ class ProductController extends Controller
 
     /**
      * @param $product_name
-     * @return Product[]
+     * @return Object[]
      */
     public function search_list_products($product_name)
     {

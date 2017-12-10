@@ -10,10 +10,8 @@ app_lucky_number:
     controller: App\Controller\LuckyController::number
 
 app_home:
-  path: /{id}
-  controller: App\Controller\ProductController::information
-  requirements:
-        page: '\d+'
+  path: /
+  controller: App\Controller\ProductController::search
 
 app_product_information:
     path: /produit/information/{id}
