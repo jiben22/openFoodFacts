@@ -48,12 +48,11 @@ class ProductController extends Controller
     {
         // Création de l'entité
         $product = new Product();
-        $product->setUrl('http://world-fr.openfoodfacts.org/produit/0000000001663/creme-dessert-chocolat-ferme-de-la-fremondiere');
-        //$product->setLastModifiedDatetime('Alexandre');
-        $product->setProductName("Crème dessert chocolat");
-        $product->setServingSize("28 g (1 ONZ)");
-        $product->setIngredientsFromPalmOil(0);
-        $product->setIngredientsThatMayBeFromPalmOil(0);
+        $product->setUrl('http://world-fr.openfoodfacts.org/produit/0000000003087/farine-de-ble-noir-ferme-t-y-r-nao');
+        $product->setProductName("dessert noir");
+        $product->setServingSize("35g");
+        $product->setIngredientsFromPalmOil(3);
+        $product->setIngredientsThatMayBeFromPalmOil(1);
 
         // We retrieve the EntityManager
         $em = $this->getDoctrine()->getManager();
@@ -87,6 +86,9 @@ class ProductController extends Controller
             // We call function to make a statement
             $list_products = $this->search_list_products($product_name);
 
+            //TEST
+            var_dump($list_products);
+
             return $this->render('products/list.html.twig', array(
                 'list_products' => $list_products,
             ));
@@ -109,13 +111,12 @@ class ProductController extends Controller
 
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
-            ->select('p.id')
+            ->select('p')
             ->from('App:Product', 'p')
-            ->where('p.product_name LIKE  :product_name')
-            ->setParameter('product_name', $product_name)
+            ->where('p.product_name LIKE :product_name')
             //%*% the name of product must contents the word
             // product_name into the row
-            ->setParameter('product_name', '%My Products%')
+            ->setParameter('product_name', '%' . $product_name .'%')
             ->orderBy('p.product_name', 'ASC')
             ->getQuery();
 
