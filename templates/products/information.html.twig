@@ -3,7 +3,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-Informations produit - {{ parent() }} {# IL FAUDRAIT AFFICHER LE NOM DU PRODUIT #}
+{{ product.getProductName }} - Informations produit
 {% endblock %}
 
 {% block stylesheets %}
@@ -85,12 +85,24 @@ Informations produit - {{ parent() }} {# IL FAUDRAIT AFFICHER LE NOM DU PRODUIT 
           <div class="card mt-4">
             {# <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> #}
             <div class="card-body">
-              <h3 class="card-title">Nom du produit</h3>
+              <h3 class="card-title">{{ product.getProductName }}</h3>
               <h4>Caractéristiques du produit</h4>
+              <p>
+                Dénomination générique: {{ product.getProductName }}
+              </p>
+              <p>
+                Portion: {{ product.getServingSize }}
+              </p>
               {# <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente dicta fugit fugiat hic aliquam itaque facere, soluta. Totam id dolores, sint aperiam sequi pariatur praesentium animi perspiciatis molestias iure, ducimus!</p>
               <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
               4.0 stars #}
               <h4>Ingrédients</h4>
+              <p>
+                Ingrédients de l'huile de palme: {{ product.getIngredientsFromPalmOil }}
+              </p>
+              <p>
+                Ingrédients qui peuvent provenir de l'huile de palme: {{ product.getIngredientsThatMayBeFromPalmOil }}
+              </p>
               <h4>Informations nutrionnelles</h4>
 
             </div>

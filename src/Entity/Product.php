@@ -42,18 +42,19 @@ class Product
     private $serving_size;
 
     /**
-     * @ORM\Column(name="ingredients_from_palm_oil", type="text")
+     * @ORM\Column(name="ingredients_from_palm_oil", type="integer")
      */
     private $ingredients_from_palm_oil;
 
     /**
-     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil", type="text")
+     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil", type="integer")
      */
     private $ingredients_that_may_be_from_palm_oil;
 
     public function __construct()
     {
       $this->created_datetime = new \Datetime();
+      $this->last_modified_datetime = new \Datetime();
     }
 
     /**
@@ -115,7 +116,7 @@ class Product
     /**
      * @param string $product_name
      */
-    public function setProductname($product_name)
+    public function setProductName($product_name)
     {
       $this->product_name = $product_name;
     }
@@ -123,7 +124,7 @@ class Product
     /**
      * @return string
      */
-    public function getProductname()
+    public function getProductName()
     {
       return $this->product_name;
     }
@@ -145,7 +146,7 @@ class Product
     }
 
     /**
-     * @param text $ingredients_from_palm_oil
+     * @param integer $ingredients_from_palm_oil
      */
     public function setIngredientsFromPalmOil($ingredients_from_palm_oil)
     {
@@ -153,7 +154,7 @@ class Product
     }
 
     /**
-     * @return text
+     * @return integer
      */
     public function getIngredientsFromPalmOil()
     {
@@ -161,7 +162,7 @@ class Product
     }
 
     /**
-     * @param text $ingredients_that_may_be_from_palm_oil
+     * @param integer $ingredients_that_may_be_from_palm_oil
      */
     public function setIngredientsThatMayBeFromPalmOil($ingredients_that_may_be_from_palm_oil)
     {
@@ -169,9 +170,9 @@ class Product
     }
 
     /**
-     * @return text
+     * @return integer
      */
-    public function getingredients_that_may_be_from_palm_oil()
+    public function getIngredientsThatMayBeFromPalmOil()
     {
       return $this->ingredients_that_may_be_from_palm_oil;
     }

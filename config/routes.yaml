@@ -20,3 +20,7 @@ app_product_information:
     controller: App\Controller\ProductController::information
     requirements:
         page: '\d+'
+
+app_product_search:
+    path: /produit/recherche
+    controller: App\Controller\ProductController::search

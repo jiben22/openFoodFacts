@@ -35,6 +35,45 @@ class ProductController extends Controller
             );
         }
 
-        return new JsonResponse($product);
+        return $product;
+    }
+
+    //Function temporaire to create a entity
+    public function createEntity()
+    {
+        // Création de l'entité
+        $product = new Product();
+        $product->setUrl('http://world-fr.openfoodfacts.org/produit/0000000001663/creme-dessert-chocolat-ferme-de-la-fremondiere');
+        //$product->setLastModifiedDatetime('Alexandre');
+        $product->setProductName("Crème dessert chocolat");
+        $product->setServingSize("28 g (1 ONZ)");
+        $product->setIngredientsFromPalmOil(0);
+        $product->setIngredientsThatMayBeFromPalmOil(0);
+
+        // On peut ne pas définir ni la date ni la publication,
+        // car ces attributs sont définis automatiquement dans le constructeur
+
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+
+        // Étape 1 : On « persiste » l'entité
+        $em->persist($product);
+
+        // Étape 2 : On « flush » tout ce qui a été persisté avant
+        $em->flush();
+    }
+
+
+    public function search()
+    {
+        return $this->render('products/search.html.twig');
+    }
+
+    public function form_search()
+    {
+        $form = $this->createFormBuilder($task)
+            ->add('product_name', TextType::class)
+            ->add('save', SubmitType::class, array('label' => 'Rechercher'))
+            ->getForm();
     }
 }
