@@ -42,14 +42,20 @@ class Product
     private $serving_size;
 
     /**
-     * @ORM\Column(name="ingredients_from_palm_oil", type="integer")
+     * @ORM\OneToMany(targetEntity="App\Entity\Countries", mappedBy="product")
      */
-    private $ingredients_from_palm_oil;
+    private $country;
 
     /**
-     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil", type="integer")
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingredients", mappedBy="product")
      */
-    private $ingredients_that_may_be_from_palm_oil;
+    private $ingredients;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", mappedBy="product")
+     */
+    private $nutritional_information;
+
 
     public function __construct()
     {
@@ -146,34 +152,26 @@ class Product
     }
 
     /**
-     * @param integer $ingredients_from_palm_oil
+     * @return Countries
      */
-    public function setIngredientsFromPalmOil($ingredients_from_palm_oil)
+    public function getCountry()
     {
-      $this->ingredients_from_palm_oil = $ingredients_from_palm_oil;
+      return $this->country;
     }
 
     /**
-     * @return integer
+     * @return Ingredients
      */
-    public function getIngredientsFromPalmOil()
+    public function getIngredients()
     {
-      return $this->ingredients_from_palm_oil;
+      return $this->ingredients;
     }
 
     /**
-     * @param integer $ingredients_that_may_be_from_palm_oil
+     * @return NutritionalInformation
      */
-    public function setIngredientsThatMayBeFromPalmOil($ingredients_that_may_be_from_palm_oil)
+    public function getNutritionalInformation()
     {
-      $this->ingredients_that_may_be_from_palm_oil = $ingredients_that_may_be_from_palm_oil;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getIngredientsThatMayBeFromPalmOil()
-    {
-      return $this->ingredients_that_may_be_from_palm_oil;
+      return $this->nutritional_information;
     }
 }
