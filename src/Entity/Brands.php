@@ -17,12 +17,12 @@ class Brands
     private $id;
 
     /**
-     * @ORM\Column(name="brand", type="string", length=20)
+     * @ORM\Column(name="brand", type="string", length=64)
      */
     private $brand;
 
     /**
-     * @ORM\Column(name="brand_tags", type="string", length=20)
+     * @ORM\Column(name="brand_tags", type="string", length=64)
      */
     private $brand_tags;
 

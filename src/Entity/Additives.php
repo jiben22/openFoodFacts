@@ -17,9 +17,14 @@ class Additives
     private $id;
 
     /**
+     * @ORM\Column(name="additive_fr", type="text", nullable=true)
+     */
+    private $additive_fr;
+
+    /**
      * @param string $additive_fr
      */
-    public function setAdditiveFr($additive_fr)
+    public function setAdditiveFr($additive_fr = null)
     {
       $this->additive_fr = $additive_fr;
     }

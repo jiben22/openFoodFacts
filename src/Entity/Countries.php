@@ -17,7 +17,7 @@ class Countries
     private $id;
 
     /**
-     * @ORM\Column(name="CountriesRepository_fr", type="string", length=32)
+     * @ORM\Column(name="Country_fr", type="string", length=64)
      */
     private $country_fr;
 
@@ -30,9 +30,9 @@ class Countries
     }
 
     /**
-     * @param string $countries_fr
+     * @param string $country_fr
      */
-    public function setCountrysFr($country_fr)
+    public function setCountryFr($country_fr)
     {
       $this->country_fr = $country_fr;
     }

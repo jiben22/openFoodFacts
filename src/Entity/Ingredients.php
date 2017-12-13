@@ -16,8 +16,9 @@ class Ingredients
      */
     private $id;
 
+//* @ORM\Column(name="ingredient", type="string", length=54)
     /**
-     * @ORM\Column(name="ingredient", type="string", length=54)
+     * @ORM\Column(name="ingredient", type="text")
      */
     private $ingredient;
 
