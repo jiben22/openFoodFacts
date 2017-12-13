@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(name="url", type="string", length=120)
+     * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
 
@@ -32,35 +33,66 @@ class Product
     private $last_modified_datetime;
 
     /**
-     * @ORM\Column(name="product_name", type="string", length=120)
+     * @ORM\Column(name="product_name", type="string", length=120, nullable=true)
      */
     private $product_name;
 
     /**
-     * @ORM\Column(name="serving_size", type="string", length=50)
+     * @ORM\Column(name="serving_size", type="string", length=128)
      */
     private $serving_size;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Countries", mappedBy="product")
+     * @ORM\Column(name="additives_n", type="string", length=132)
+     */
+    private $additives_n;
+
+    /**
+     * @ORM\Column(name="ingredients_from_palm_oil_n", type="integer", nullable=true)
+     */
+    //private $ingredients_from_palm_oil_n;
+
+    /**
+     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil_n", type="integer", nullable=true)
+     */
+    //private $ingredients_that_may_be_from_palm_oil_n;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Additives", cascade={"persist"})
+     */
+    private $additives;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Brands")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $brand;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Countries")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $country;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ingredients", mappedBy="product")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Ingredients")
      */
     private $ingredients;
 
+    //Add a method to add ingredients into a product
+
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", mappedBy="product")
+     * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", cascade={"persist"})
      */
     private $nutritional_information;
 
 
     public function __construct()
     {
-      $this->created_datetime = new \Datetime();
+      $this->created_datetime       = new \Datetime();
       $this->last_modified_datetime = new \Datetime();
+      $this->additives              = new ArrayCollection();
+      $this->ingredients            = new ArrayCollection();
     }
 
     /**
@@ -122,7 +154,7 @@ class Product
     /**
      * @param string $product_name
      */
-    public function setProductName($product_name)
+    public function setProductName($product_name = null)
     {
       $this->product_name = $product_name;
     }
@@ -138,7 +170,7 @@ class Product
     /**
      * @param string $serving_size
      */
-    public function setServingSize($serving_size)
+    public function setServingSize($serving_size = null)
     {
       $this->serving_size = $serving_size;
     }
@@ -152,6 +184,108 @@ class Product
     }
 
     /**
+     * @param string $additives_n
+     */
+    public function setAdditivesN($additives_n = null)
+    {
+      $this->additives_n = $additives_n;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditivesN()
+    {
+      return $this->additives_n;
+    }
+
+    //Add a method to calculate the number of additives
+
+    /**
+     * @param integer $ingredients_from_palm_oil_n
+     */
+    public function setIngredientsFromPalmOilN($ingredients_from_palm_oil_n)
+    {
+      $this->ingredients_from_palm_oil_n = $ingredients_from_palm_oil_n;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIngredientsFromPalmOilN()
+    {
+      return $this->ingredients_from_palm_oil_n;
+    }
+
+    //Add a method to calculate the count of product which contents palm oil
+
+    /**
+     * @param integer $ingredients_that_may_be_from_palm_oil_n
+     */
+    public function setIngredientsThatMayBeFromPalmOilN($ingredients_that_may_be_from_palm_oil_n)
+    {
+      $this->ingredients_that_may_be_from_palm_oil_n = $ingredients_that_may_be_from_palm_oil_n;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIngredientsThatMayBeFromPalmOilN()
+    {
+      return $this->ingredients_that_may_be_from_palm_oil_n;
+    }
+
+    //Add a method to calculate the count of product which can contents palm oil
+
+    /**
+     * @param Additives $additive
+     */
+    public function addAdditive(Additives $additive)
+    {
+      $this->additives[] = $additive;
+    }
+
+    /**
+     * @param Additives $additive
+     */
+    public function removeAdditive(Additives $additive)
+    {
+      $this->additives->removeElement($additive);
+    }
+
+    /**
+     * @return \Array
+     */
+     public function getAdditives()
+     {
+       return $this->additives;
+     }
+
+     /**
+      * @param Brands $brand
+      */
+     public function setBrand(Brands $brand)
+     {
+       $this->brand = $brand;
+     }
+
+     /**
+      * @return Brands
+      */
+     public function getBrand()
+     {
+       return $this->brand;
+     }
+
+     /**
+      * @param Countries $country
+      */
+     public function setCountry(Countries $country)
+     {
+       $this->country = $country;
+     }
+
+    /**
      * @return Countries
      */
     public function getCountry()
@@ -160,12 +294,36 @@ class Product
     }
 
     /**
-     * @return Ingredients
+     * @param Ingredients $ingredient
      */
-    public function getIngredients()
+    public function addIngredient(Ingredients $ingredient)
     {
-      return $this->ingredients;
+      $this->ngredients[] = $ingredient;
     }
+
+    /**
+     * @param Ingredients $ingredient
+     */
+    public function removeIngredient(Ingredients $ingredient)
+    {
+      $this->ingredients->removeElement($ingredient);
+    }
+
+    /**
+     * @return \Array
+     */
+     public function getIngredients()
+     {
+       return $this->ingredients;
+     }
+
+     /**
+      * @param NutritionalInformation $nutritional_information
+      */
+     public function setNutritionalInformation(NutritionalInformation $nutritional_information = null)
+     {
+       $this->nutritional_information = $nutritional_information;
+     }
 
     /**
      * @return NutritionalInformation

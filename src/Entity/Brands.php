@@ -17,22 +17,14 @@ class Brands
     private $id;
 
     /**
-     * @ORM\Column(name="brand", type="string", length=20)
+     * @ORM\Column(name="brand", type="string", length=64)
      */
     private $brand;
 
     /**
-     * @ORM\Column(name="brand_tags", type="string", length=20)
+     * @ORM\Column(name="brand_tags", type="string", length=64)
      */
     private $brand_tags;
-
-    /**
-     * @return string
-     */
-    public function getBrand()
-    {
-      return $this->brand;
-    }
 
     /**
      * @param string $brand
@@ -45,9 +37,9 @@ class Brands
     /**
      * @return string
      */
-    public function getBrandTags()
+    public function getBrand()
     {
-      return $this->brand_tags;
+      return $this->brand;
     }
 
     /**
@@ -57,5 +49,12 @@ class Brands
     {
       $this->brand_tags = $brand_tags;
     }
-}
 
+    /**
+     * @return string
+     */
+    public function getBrandTags()
+    {
+      return $this->brand_tags;
+    }
+}

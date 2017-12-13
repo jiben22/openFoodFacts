@@ -40,14 +40,6 @@ class User
     }
 
     /**
-     * @return string
-     */
-    public function getUserName()
-    {
-      return $this->user_name;
-    }
-
-    /**
      * @param string $user_name
      */
     public function setUserName($user_name)
@@ -58,9 +50,9 @@ class User
     /**
      * @return string
      */
-    public function getPassword()
+    public function getUserName()
     {
-      return $this->password;
+      return $this->user_name;
     }
 
     /**
@@ -74,9 +66,9 @@ class User
     /**
      * @return string
      */
-    public function getUserMail()
+    public function getPassword()
     {
-      return $this->user_mail;
+      return $this->password;
     }
 
     /**
@@ -87,5 +79,11 @@ class User
       $this->user_mail = $user_mail;
     }
 
+    /**
+     * @return string
+     */
+    public function getUserMail()
+    {
+      return $this->user_mail;
+    }
 }
-

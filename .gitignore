@@ -5,4 +5,9 @@
 /var/
 /vendor/
 /config/packages/doctrine.yaml
+
+### Temp ###
+/src/Data/
+/src/Command/
+
 ###< symfony/framework-bundle ###
