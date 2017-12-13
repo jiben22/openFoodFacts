@@ -17,9 +17,9 @@ class Countries
     private $id;
 
     /**
-     * @ORM\Column(name="countries_fr", type="string", length=32)
+     * @ORM\Column(name="CountriesRepository_fr", type="string", length=32)
      */
-    private $countries_fr;
+    private $country_fr;
 
     /**
      * @return int
@@ -32,16 +32,16 @@ class Countries
     /**
      * @param string $countries_fr
      */
-    public function setCountriesFr($countries_fr)
+    public function setCountrysFr($country_fr)
     {
-      $this->countries_fr = $countries_fr;
+      $this->country_fr = $country_fr;
     }
 
     /**
      * @return string
      */
-    public function getCountriesFr()
+    public function getCountryFr()
     {
-      return $this->countries_fr;
+      return $this->country_fr;
     }
 }

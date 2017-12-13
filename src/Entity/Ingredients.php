@@ -17,19 +17,9 @@ class Ingredients
     private $id;
 
     /**
-     * @ORM\Column(name="ingredients_text", type="text")
+     * @ORM\Column(name="ingredient", type="string", length=54)
      */
-    private $ingredients_text;
-
-    /**
-     * @ORM\Column(name="ingredients_from_palm_oil", type="integer")
-     */
-    private $ingredients_from_palm_oil;
-
-    /**
-     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil", type="integer")
-     */
-    private $ingredients_that_may_be_from_palm_oil;
+    private $ingredient;
 
     /**
      * @return int
@@ -40,50 +30,18 @@ class Ingredients
     }
 
     /**
-     * @param text $ingredients_text
+     * @param string $ingredient
      */
-    public function setIngredientsText($ingredients_text)
+    public function setIngredient($ingredient)
     {
-      $this->ingredients_text = $ingredients_text;
+      $this->ingredient = $ingredient;
     }
 
     /**
-     * @return text
+     * @return string
      */
-    public function getIngredientsText()
+    public function getIngredient()
     {
-      return $this->ingredients_text;
-    }
-
-    /**
-     * @param integer $ingredients_from_palm_oil
-     */
-    public function setIngredientsFromPalmOil($ingredients_from_palm_oil)
-    {
-      $this->ingredients_from_palm_oil = $ingredients_from_palm_oil;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getIngredientsFromPalmOil()
-    {
-      return $this->ingredients_from_palm_oil;
-    }
-
-    /**
-     * @param integer $ingredients_that_may_be_from_palm_oil
-     */
-    public function setIngredientsThatMayBeFromPalmOil($ingredients_that_may_be_from_palm_oil)
-    {
-      $this->ingredients_that_may_be_from_palm_oil = $ingredients_that_may_be_from_palm_oil;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getIngredientsThatMayBeFromPalmOil()
-    {
-      return $this->ingredients_that_may_be_from_palm_oil;
+      return $this->ingredient;
     }
 }

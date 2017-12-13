@@ -17,45 +17,18 @@ class Additives
     private $id;
 
     /**
-     * @ORM\Column(name="additives_n", type="integer")
+     * @param string $additive_fr
      */
-    private $additives_n;
+    public function setAdditiveFr($additive_fr)
+    {
+      $this->additive_fr = $additive_fr;
+    }
 
     /**
      * @return string
      */
-    public function getAdditivesN()
+    public function getAdditiveFr()
     {
-      return $this->additives_n;
-    }
-
-    /**
-     * @param string $additives_n
-     */
-    public function setAdditivesN($additives_n)
-    {
-      $this->additives_n = $additives_n;
-    }
-
-    /**
-     * @ORM\Column(name="additives_fr", type="string", length=20)
-     */
-    private $additives_fr;
-
-    /**
-     * @return string
-     */
-    public function getAdditivesFr()
-    {
-      return $this->additives_fr;
-    }
-
-    /**
-     * @param string $additives_fr
-     */
-    public function setAdditivesFr($additives_fr)
-    {
-      $this->additives_fr = $additives_fr;
+      return $this->additive_fr;
     }
 }
-

@@ -27,14 +27,6 @@ class Brands
     private $brand_tags;
 
     /**
-     * @return string
-     */
-    public function getBrand()
-    {
-      return $this->brand;
-    }
-
-    /**
      * @param string $brand
      */
     public function setBrand($brand)
@@ -45,9 +37,9 @@ class Brands
     /**
      * @return string
      */
-    public function getBrandTags()
+    public function getBrand()
     {
-      return $this->brand_tags;
+      return $this->brand;
     }
 
     /**
@@ -57,5 +49,12 @@ class Brands
     {
       $this->brand_tags = $brand_tags;
     }
-}
 
+    /**
+     * @return string
+     */
+    public function getBrandTags()
+    {
+      return $this->brand_tags;
+    }
+}

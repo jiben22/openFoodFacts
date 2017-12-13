@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,11 +42,57 @@ class Product
      */
     private $serving_size;
 
+    /**
+     * @ORM\Column(name="additives_n", type="integer")
+     */
+    private $additives_n;
+
+    /**
+     * @ORM\Column(name="ingredients_from_palm_oil", type="integer")
+     */
+    private $ingredients_from_palm_oil;
+
+    /**
+     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil", type="integer")
+     */
+    private $ingredients_that_may_be_from_palm_oil;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Additives", cascade={"persist"})
+     */
+    private $additives;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Brands")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $brand;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Countries")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $country;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Ingredients")
+     */
+    private $ingredients;
+
+    //Add a method to add ingredients into a product
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", cascade={"persist"})
+     */
+    private $nutritional_information;
+
 
     public function __construct()
     {
-      $this->created_datetime = new \Datetime();
+      $this->created_datetime       = new \Datetime();
       $this->last_modified_datetime = new \Datetime();
+      $this->additives              = new ArrayCollection();
+      $this->ingredients            = new ArrayCollection();
     }
 
     /**
@@ -134,5 +181,83 @@ class Product
     public function getServingSize()
     {
       return $this->serving_size;
+    }
+
+    /**
+     * @param string $additives_n
+     */
+    public function setAdditivesN($additives_n)
+    {
+      $this->additives_n = $additives_n;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditivesN()
+    {
+      return $this->additives_n;
+    }
+
+    //Add a method to calculate the number of additives
+
+    /**
+     * @param integer $ingredients_from_palm_oil
+     */
+    public function setIngredientsFromPalmOil($ingredients_from_palm_oil)
+    {
+      $this->ingredients_from_palm_oil = $ingredients_from_palm_oil;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIngredientsFromPalmOil()
+    {
+      return $this->ingredients_from_palm_oil;
+    }
+
+    //Add a method to calculate the count of product which contents palm oil
+
+    /**
+     * @param integer $ingredients_that_may_be_from_palm_oil
+     */
+    public function setIngredientsThatMayBeFromPalmOil($ingredients_that_may_be_from_palm_oil)
+    {
+      $this->ingredients_that_may_be_from_palm_oil = $ingredients_that_may_be_from_palm_oil;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIngredientsThatMayBeFromPalmOil()
+    {
+      return $this->ingredients_that_may_be_from_palm_oil;
+    }
+
+    //Add a method to calculate the count of product which can contents palm oil
+
+    /**
+     * @return Countries
+     */
+    public function getCountry()
+    {
+      return $this->country;
+    }
+
+    /**
+     * @return Ingredients
+     */
+    public function getIngredients()
+    {
+      return $this->ingredients;
+    }
+
+    /**
+     * @return NutritionalInformation
+     */
+    public function getNutritionalInformation()
+    {
+      return $this->nutritional_information;
     }
 }
