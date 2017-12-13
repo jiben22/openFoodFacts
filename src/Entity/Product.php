@@ -41,21 +41,6 @@ class Product
      */
     private $serving_size;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Countries", mappedBy="product")
-     */
-    private $country;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ingredients", mappedBy="product")
-     */
-    private $ingredients;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", mappedBy="product")
-     */
-    private $nutritional_information;
-
 
     public function __construct()
     {
@@ -149,29 +134,5 @@ class Product
     public function getServingSize()
     {
       return $this->serving_size;
-    }
-
-    /**
-     * @return Countries
-     */
-    public function getCountry()
-    {
-      return $this->country;
-    }
-
-    /**
-     * @return Ingredients
-     */
-    public function getIngredients()
-    {
-      return $this->ingredients;
-    }
-
-    /**
-     * @return NutritionalInformation
-     */
-    public function getNutritionalInformation()
-    {
-      return $this->nutritional_information;
     }
 }
