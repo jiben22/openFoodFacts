@@ -5,6 +5,7 @@
 /var/
 /vendor/
 /config/packages/doctrine.yaml
+/config/services.yaml
 
 ### Temp ###
 /src/Data/
