@@ -18,7 +18,7 @@ class Ingredients
 
 //* @ORM\Column(name="ingredient", type="string", length=54)
     /**
-     * @ORM\Column(name="ingredient", type="text")
+     * @ORM\Column(name="ingredient", type="text", nullable=true)
      */
     private $ingredient;
 

@@ -17,7 +17,7 @@ class Countries
     private $id;
 
     /**
-     * @ORM\Column(name="Country_fr", type="string", length=64)
+     * @ORM\Column(name="Country_fr", type="string", length=64, nullable=true)
      */
     private $country_fr;
 

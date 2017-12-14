@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(name="url", type="string", length=255)
+     * @ORM\Column(name="url", type="string", length=255, nullable=true)
      */
     private $url;
 
@@ -33,19 +33,19 @@ class Product
     private $last_modified_datetime;
 
     /**
-     * @ORM\Column(name="product_name", type="string", length=120, nullable=true)
+     * @ORM\Column(name="product_name", type="string", length=255, nullable=true)
      */
     private $product_name;
 
     /**
-     * @ORM\Column(name="serving_size", type="string", length=128)
+     * @ORM\Column(name="serving_size", type="string", length=128, nullable=true)
      */
     private $serving_size;
 
     /**
-     * @ORM\Column(name="additives_n", type="string", length=132)
+     * @ORM\Column(name="additives_n", type="integer", nullable=true)
      */
-    private $additives_n;
+    //private $additives_n;
 
     /**
      * @ORM\Column(name="ingredients_from_palm_oil_n", type="integer", nullable=true)
@@ -184,15 +184,19 @@ class Product
     }
 
     /**
-     * @param string $additives_n
+     * @param integer $additives_n
      */
     public function setAdditivesN($additives_n = null)
     {
+      if($additives_n == "")
+      {
+          $additives_n = null;
+      }
       $this->additives_n = $additives_n;
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getAdditivesN()
     {
