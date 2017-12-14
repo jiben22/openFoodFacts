@@ -73,7 +73,10 @@ class CsvImportCommand extends Command
              */
             $product = new Product();
             $product->setUrl($row['url']);
-            $product->setProductName($row['product_name']);
+            //Entering data process for product_name (ucfirst)
+            $product_cap = strtolower($row['product_name']);
+            $product_cap = ucfirst($product_cap);
+            $product->setProductName($product_cap);
             $product->setServingSize($row['serving_size']);
             $product->setAdditivesN($row['additives_n']);
             $product->setIngredientsFromPalmOilN($row['ingredients_from_palm_oil_n']);

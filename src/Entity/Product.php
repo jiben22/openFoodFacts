@@ -84,7 +84,7 @@ class Product
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", cascade={"persist"})
      */
-    private $nutritional_information;
+    //private $nutritional_information;
 
 
     public function __construct()

@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product;
 
 class ProductController extends Controller
-{    
+{
     public function information(Request $request)
     {
         // We retrieve our id route parameter
@@ -83,8 +83,11 @@ class ProductController extends Controller
             $product = $form->getData();
             $product_name = $product->getProductName();
 
+            $product_cap = strtolower($product_name);
+            $product_cap = ucfirst($product_cap);
+
             // We call function to make a statement
-            $list_products = $this->search_list_products($product_name);
+            $list_products = $this->search_list_products($product_cap);
 
             return $this->render('products/list.html.twig', array(
                 'list_products' => $list_products,
