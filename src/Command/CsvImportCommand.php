@@ -138,7 +138,6 @@ class CsvImportCommand extends Command
              * Create new NUTRIONAL_INFORMATION
              * @var NutritionalInformation $nutritional_information
              */
-            /*
             $nutritional_information = new NutritionalInformation();
             $nutritional_information->setNutritionGradeFr($row['nutrition_grade_fr']);
             $nutritional_information->setEnergy100g($row['energy_100g']);
@@ -159,13 +158,19 @@ class CsvImportCommand extends Command
             $this->em->persist($nutritional_information);
 
             $product->setNutritionalInformation($nutritional_information);
-*/
+
             $io->progressAdvance();
         }
 
         $io->progressFinish();
 
-        $this->em->flush();
+        try {
+           // ...
+           $this->em->flush();
+        }
+        catch (UniqueConstraintViolationException $e) {
+            // ....
+        }
 
         $io->success('CSV is imported !');
     }

@@ -43,19 +43,19 @@ class Product
     private $serving_size;
 
     /**
-     * @ORM\Column(name="additives_n", type="integer", nullable=true)
+     * @ORM\Column(name="additives_n", type="decimal", precision=5, nullable=true)
      */
     //private $additives_n;
 
     /**
-     * @ORM\Column(name="ingredients_from_palm_oil_n", type="integer", nullable=true)
+     * @ORM\Column(name="ingredients_from_palm_oil_n", type="decimal", precision=5, nullable=true)
      */
-    //private $ingredients_from_palm_oil_n;
+    private $ingredients_from_palm_oil_n;
 
     /**
-     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil_n", type="integer", nullable=true)
+     * @ORM\Column(name="ingredients_that_may_be_from_palm_oil_n", type="decimal", precision=5, nullable=true)
      */
-    //private $ingredients_that_may_be_from_palm_oil_n;
+    private $ingredients_that_may_be_from_palm_oil_n;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Additives", cascade={"persist"})
@@ -84,7 +84,7 @@ class Product
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\NutritionalInformation", cascade={"persist"})
      */
-    //private $nutritional_information;
+    private $nutritional_information;
 
 
     public function __construct()
@@ -208,8 +208,12 @@ class Product
     /**
      * @param integer $ingredients_from_palm_oil_n
      */
-    public function setIngredientsFromPalmOilN($ingredients_from_palm_oil_n)
+    public function setIngredientsFromPalmOilN($ingredients_from_palm_oil_n = null)
     {
+      if($ingredients_from_palm_oil_n == "")
+      {
+          $ingredients_from_palm_oil_n = null;
+      }
       $this->ingredients_from_palm_oil_n = $ingredients_from_palm_oil_n;
     }
 
@@ -224,15 +228,19 @@ class Product
     //Add a method to calculate the count of product which contents palm oil
 
     /**
-     * @param integer $ingredients_that_may_be_from_palm_oil_n
+     * @param decimal $ingredients_that_may_be_from_palm_oil_n
      */
-    public function setIngredientsThatMayBeFromPalmOilN($ingredients_that_may_be_from_palm_oil_n)
+    public function setIngredientsThatMayBeFromPalmOilN($ingredients_that_may_be_from_palm_oil_n = null)
     {
+      if($ingredients_that_may_be_from_palm_oil_n == "")
+      {
+          $ingredients_that_may_be_from_palm_oil_n = null;
+      }
       $this->ingredients_that_may_be_from_palm_oil_n = $ingredients_that_may_be_from_palm_oil_n;
     }
 
     /**
-     * @return integer
+     * @return decimal
      */
     public function getIngredientsThatMayBeFromPalmOilN()
     {
@@ -302,7 +310,7 @@ class Product
      */
     public function addIngredient(Ingredients $ingredient)
     {
-      $this->ngredients[] = $ingredient;
+      $this->ingredients[] = $ingredient;
     }
 
     /**
