@@ -43,28 +43,6 @@ class ProductController extends Controller
         return $product;
     }
 
-    //Function temporaire to create a entity
-    public function createEntity()
-    {
-        // Création de l'entité
-        $product = new Product();
-        $product->setUrl('http://world-fr.openfoodfacts.org/produit/0000000003087/farine-de-ble-noir-ferme-t-y-r-nao');
-        $product->setProductName("dessert noir");
-        $product->setServingSize("35g");
-        $product->setIngredientsFromPalmOil(3);
-        $product->setIngredientsThatMayBeFromPalmOil(1);
-
-        // We retrieve the EntityManager
-        $em = $this->getDoctrine()->getManager();
-
-        // Step 1 : On « persiste » l'entité
-        $em->persist($product);
-
-        // Step 2 : We « flush » all that persist before
-        $em->flush();
-    }
-
-
     public function search(Request $request)
     {
         $product = new Product();
@@ -89,8 +67,40 @@ class ProductController extends Controller
             // We call function to make a statement
             $list_products = $this->search_list_products($product_cap);
 
+            //TEST
+            // It's necessary to create an array for stockage for products img
+
+            //Recover image for each product
+            foreach($list_products as $key => $product)
+            {
+                //Recover code for product to identify the url
+                $code = $product->getCode();
+                //Recover data in json
+                $json = file_get_contents('https://world.openfoodfacts.org/api/v0/product/'. $code .'.json');
+                $data_json = json_decode($json, TRUE);
+
+                //TEST
+                //var_dump($data_json);
+                //echo '********************************************************************************************';
+
+                //Initialization to img_small at null
+                $img_small = null;
+                if( isset($data_json['product']) && isset($data_json['product']['image_small_url']) )
+                {
+                    //Recover url for img small
+                    $img_small = $data_json['product']['image_small_url'];
+                    //Boolean which woudl say if img exist or no
+                    $img_bool = 1;
+                }
+                else {
+                    $img_bool = 0;
+                }
+            }
+
             return $this->render('products/list.html.twig', array(
                 'list_products' => $list_products,
+                'img_small' => $img_small,
+                'img_bool' => $img_bool,
             ));
         }
 
@@ -109,6 +119,9 @@ class ProductController extends Controller
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
+        //Limit of results
+        $limit = 100;
+
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
             ->select('p')
@@ -118,6 +131,8 @@ class ProductController extends Controller
             // product_name into the row
             ->setParameter('product_name', '%' . $product_name .'%')
             ->orderBy('p.product_name', 'ASC')
+            //TEST
+            ->setMaxResults($limit)
             ->getQuery();
 
         return $list_products = $qb->getResult();

@@ -1,4 +1,4 @@
-{# templates/product_information/information.html.twig #}
+{# templates/product_information/list.html.twig #}
 
 {% extends "base.html.twig" %}
 
@@ -12,44 +12,52 @@
 {% block body %}
   <div class="col-lg-9">
 
-    <div class="card mt-4">
-      <div class="card-body">
-        <h3 class="card-title"></h3>
-        <h4>Liste produits</h4>
-        <table border="1">
-          <thead>
-            <tr>
-              <th>
-                Nom du produit
-              </th>
-              <th>
-                Dernière modification
-              </th>
-              <th>
-                Portion
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in list_products %}
-                <tr>
-                  <td>
-                    <a href="{{ path('app_product_information', {'id': product.getId}) }}">
-                    {{ product.getProductName }}
-                  </a>
-                  </td>
-                  <td>
-                    {{ product.getLastModifiedDatetime|date('d-m-Y H:i') }}
-                  </td>
-                  <td>
-                    {{ product.getServingSize }}
-                  </td>
-                </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <!-- Jumbotron Header -->
+    <header class="jumbotron my-4">
+      <h1 class="display-3">Liste de produits</h1>
+      <p class="lead">
+        Yeah man, mate mon stock de prod !
+      </p>
+      <a href="#" class="btn btn-primary btn-lg">Appelle mamène !</a>
+    </header>
+
+    <!-- Page Features -->
+    <div class="row text-center">
+
+      {% for product in list_products %}
+      <a href="{{ path('app_product_information', {'id': product.getId}) }}">
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card">
+            {% if img_bool %} {# Validation if img exist #}
+              <img class="card-img-top" src="{{ img_small }}" alt="" width="253" height="164">
+            {% else %}
+              <img class="card-img-top" src="{{ asset('img/no_img.png') }}" alt="Aucune image" width="253" height="164">
+            {% endif %}
+            <div class="card-body">
+              <h4 class="card-title">
+              </br/>
+                {{ product.getProductName }}
+              </h4>
+              <p class="card-text">
+                {{ product.getLastModifiedDatetime|date('d-m-Y H:i') }}
+              </p>
+              <p class="card-text">
+                {{ product.viewBrand }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <a href="{{ path('app_product_information', {'id': product.getId}) }}" class="btn btn-primary">
+                Voir le produit
+              </a>
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+
     </div>
+    <!-- /.row -->
+
   </div>
   <!-- /.col-lg-9 -->
 {% endblock %}

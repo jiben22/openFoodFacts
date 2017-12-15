@@ -18,6 +18,11 @@ class Product
     private $id;
 
     /**
+     * @ORM\Column(name="code", type="bigint")
+     */
+    private $code;
+
+    /**
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
      */
     private $url;
@@ -101,6 +106,22 @@ class Product
     public function getId()
     {
       return $this->id;
+    }
+
+    /**
+     * @param bigint $code
+     */
+    public function setCode($code)
+    {
+      $this->code = $code;
+    }
+
+    /**
+     * @return bigint
+     */
+    public function getCode()
+    {
+      return $this->code;
     }
 
     /**
@@ -287,6 +308,14 @@ class Product
      public function getBrand()
      {
        return $this->brand;
+     }
+
+     /**
+      * @return string
+      */
+     public function viewBrand()
+     {
+       return $this->getBrand()->getBrand();
      }
 
      /**

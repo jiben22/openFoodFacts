@@ -72,6 +72,7 @@ class CsvImportCommand extends Command
              * @var Product $product
              */
             $product = new Product();
+            $product->setCode($row['code']);
             $product->setUrl($row['url']);
             //Entering data process for product_name (ucfirst)
             $product_cap = strtolower($row['product_name']);
