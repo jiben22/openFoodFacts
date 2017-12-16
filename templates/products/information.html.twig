@@ -7,34 +7,137 @@
   - Informations produit
 {% endblock %}
 
-{% block stylesheets %}
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
   <div class="col-lg-9">
 
     <div class="card mt-4">
       <div class="card-body">
-        <h3 class="card-title">{{ product.getProductName }}</h3>
-        <h4>Caractéristiques du produit</h4>
-        <p>
-          Dénomination générique:
-          {{ product.getProductName }}
-        </p>
-        <p>
-          Portion:
-          {{ product.getServingSize }}
-        </p>
-        <h4>Ingrédients</h4>
-        <p>
-          Ingrédients de l'huile de palme:
-          {#{ product.getIngredientsFromPalmOil }#}
-        </p>
-        <p>
-          Ingrédients qui peuvent provenir de l'huile de palme:
-          {#{ product.getIngredientsThatMayBeFromPalmOil }#}
-        </p>
-        <h4>Informations nutrionnelles</h4>
+        <h3 class="card-title">{{ product.productName }}</h3>
+        {# Recover all var for Product characteristics #}
+        {% set brand = product.brand.brand %}
+        {% set originIngredients = product.country.countryFr %}
+
+        {# Validation if one of characteristics is not null #}
+        {% if (brand is not null)
+          or(originIngredients is not null) %}
+          <h4>Caractéristiques du produit</h4>
+          {% if (brand is not null) %}
+            <p>
+              Marque:
+              {{ brand }}
+            </p>
+          {% endif %}
+          {% if (originIngredients is not null) %}
+            <p>
+              Origine des ingrédients:
+              {{ originIngredients }}
+            </p>
+          {% endif %}
+        {% endif %}
+
+        {# Recover all var for Product ingredients #}
+        {% set listIngredients = product.ingredients %}
+        {% set ingredientsPalmOil = product.ingredientsFromPalmOilN %}
+        {% set ingredientsMayPalmOil = product.ingredientsThatMayBeFromPalmOilN %}
+        {% set listAdditives = product.additives %}
+
+        {# Validation if one of part of ingredients is not null #}
+        {% if (listIngredients is not null)
+          or(ingredientsPalmOil is not null)or(ingredientsMayPalmOil is not null)or(listAdditives is not null) %}
+          <h4>Ingrédients</h4>
+          {% if (listIngredients is not null) %}
+            <p>
+              <em>→ Les ingredients sont listés par ordre d'importance (quantité).</em>
+              Liste des ingrédients:
+              {% for ingredient in listIngredients %}
+                {{ ingredient.ingredient }}
+              {% endfor %}
+            </p>
+          {% endif %}
+          {% if (ingredientsPalmOil is not null) %}
+            <p>
+              Nombre d'ingrédients provenant de l'huile de palme:
+              {{ ingredientsPalmOil }}
+            </p>
+          {% endif %}
+          {% if (ingredientsMayPalmOil is not null) %}
+            <p>
+              Nombre d'ingrédients qui peuvent provenir de l'huile de palme:
+              {{ ingredientsMayPalmOil }}
+            </p>
+          {% endif %}
+          {% if (listAdditives is not null) %}
+            <p>
+              Additives:
+              <ul>
+                {% for additive in listAdditives %}
+                  <li>
+                    {{ additive.additiveFr }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </p>
+          {% endif %}
+        {% endif %}
+
+        {# Recover all var for Product characteristics #}
+        {% set nutriscore = product.nutritionalInformation.nutritionGradeFr %}
+        {% set nutritionalInformation = product.nutritionalInformation %}
+        {% set servingSize = product.servingSize %}
+        {# List of parts of nutritional information #}
+        {% set energy_100g = nutritionalInformation.energy100g %}
+        {% set fat_100g = nutritionalInformation.fat100g %}
+        {% set saturated_fat_100g = nutritionalInformation.saturatedfat100g %}
+        {% set cholesterol_100g = nutritionalInformation.cholesterol100g %}
+        {% set carbohydrates_100g = nutritionalInformation.carbohydrates100g %}
+        {% set sugars_100g = nutritionalInformation.sugars100g %}
+        {% set fiber_100g = nutritionalInformation.fiber100g %}
+        {% set proteins_100g = nutritionalInformation.proteins100g %}
+        {% set salt_100g = nutritionalInformation.salt100g %}
+        {% set sodium_100g = nutritionalInformation.sodium100g %}
+        {% set vitamin_a_100g = nutritionalInformation.vitamina100g %}
+        {% set calcium_100g = nutritionalInformation.calcium100g %}
+        {% set iron_100g = nutritionalInformation.iron100g %}
+
+        {# Validation if one of characteristics is not null #}
+        {% if (nutriscore is not null)
+          or(servingSize is not null)
+        or(nutritionalInformation is not null) %}
+          <h4>Informations nutrionnelles</h4>
+          {% if nutriscore == 'a' %}
+            <img src="{{ asset('img/nutriscore/nutriscore-a.svg') }}" alt="Nutriscore A">
+          {% elseif nutriscore == 'b' %}
+            <img src="{{ asset('img/nutriscore/nutriscore-b.svg') }}" alt="Nutriscore B">
+          {% elseif nutriscore == 'c' %}
+            <img src="{{ asset('img/nutriscore/nutriscore-c.svg') }}" alt="Nutriscore C">
+          {% elseif nutriscore == 'd' %}
+            <img src="{{ asset('img/nutriscore/nutriscore-d.svg') }}" alt="Nutriscore D">
+          {% elseif nutriscore == 'e' %}
+            <img src="{{ asset('img/nutriscore/nutriscore-b.svg') }}" alt="Nutriscore E">
+          {% endif %}
+
+          <h4>Repères nutritionnels pour 100 g</h4>
+          {% if nutritionalInformation is not null %}
+            <ul>
+              {% if fat_100g is not null %}
+                {% if fat_100g < 35808 %}
+                  <li>
+                    <img src="{{ asset('img/nutrient_levels/low.svg')}}" alt="Faible quantité"/>
+                    {{ fat_100g }} g <strong>Matières grasses / Lipides</strong> en faible quantité
+                  </li>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </ul>
+          {% if (servingSize is not null) %}
+            <p>
+              Portion:
+              {{ servingSize }}
+            </p>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>

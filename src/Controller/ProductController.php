@@ -80,27 +80,21 @@ class ProductController extends Controller
                 $data_json = json_decode($json, TRUE);
 
                 //TEST
-                //var_dump($data_json);
-                //echo '********************************************************************************************';
+                var_dump($data_json);
+                echo '********************************************************************************************';
 
-                //Initialization to img_small at null
-                $img_small = null;
-                if( isset($data_json['product']) && isset($data_json['product']['image_small_url']) )
+                if( isset($data_json['product']) && isset($data_json['product']['image_front_url']) )
                 {
                     //Recover url for img small
-                    $img_small = $data_json['product']['image_small_url'];
+                    $img_small = $data_json['product']['image_front_url'];
+                    //$list_products['img'] = $img_small;
                     //Boolean which woudl say if img exist or no
-                    $img_bool = 1;
-                }
-                else {
-                    $img_bool = 0;
                 }
             }
 
             return $this->render('products/list.html.twig', array(
                 'list_products' => $list_products,
-                'img_small' => $img_small,
-                'img_bool' => $img_bool,
+                //'img_small' => $img_small,
             ));
         }
 
@@ -120,7 +114,7 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //Limit of results
-        $limit = 100;
+        $limit = 30;
 
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
