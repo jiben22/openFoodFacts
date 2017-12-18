@@ -122,10 +122,29 @@
           {% if nutritionalInformation is not null %}
             <ul>
               {% if fat_100g is not null %}
-                {% if fat_100g < 35808 %}
+                {% if fat_100g < 0 %}
                   <li>
                     <img src="{{ asset('img/nutrient_levels/low.svg')}}" alt="Faible quantité"/>
-                    {{ fat_100g }} g <strong>Matières grasses / Lipides</strong> en faible quantité
+                    {{ fat_100g }}
+                    g
+                    <strong>Matières grasses / Lipides</strong>
+                    en faible quantité
+                  </li>
+                {% elseif fat_100g < 0 %}
+                  <li>
+                    <img src="{{ asset('img/nutrient_levels/moderate.svg')}}" alt="Moyenne quantité"/>
+                    {{ fat_100g }}
+                    g
+                    <strong>Matières grasses / Lipides</strong>
+                    en faible quantité
+                  </li>
+                {% elseif fat_100g < 0 %}
+                  <li>
+                    <img src="{{ asset('img/nutrient_levels/high.svg')}}" alt="Haute quantité"/>
+                    {{ fat_100g }}
+                    g
+                    <strong>Matières grasses / Lipides</strong>
+                    en faible quantité
                   </li>
                 {% endif %}
               {% endif %}
