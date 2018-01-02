@@ -12,7 +12,7 @@ doctrine:
         #server_version: '5.7'
         #charset: utf8mb4
         driver: 'pdo_pgsql'
-        server_version: '9.5'
+        server_version: '9.6'
         charset: UTF8
 
         # With Symfony 3.3, remove the `resolve:` prefix
