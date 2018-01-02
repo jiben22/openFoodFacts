@@ -4,25 +4,20 @@
 
 # config/routes.yaml
 
-# the "app_lucky_number" route name is not important yet
-app_lucky_number:
-    path: /lucky/number
-    controller: App\Controller\LuckyController::number
-
 app_home:
   path: /
-  controller: App\Controller\ProductController::search
+  controller: App\Controller\SearchProductController::searchProduct
 
 app_product_information:
     path: /produit/information/{id}
-    controller: App\Controller\ProductController::information
+    controller: App\Controller\ViewProductController::viewProduct
     requirements:
         page: '\d+'
 
 app_product_search:
     path: /produit/recherche
-    controller: App\Controller\ProductController::search
+    controller: App\Controller\SearchProductController::searchProduct
 
-app_product_list:
-    path: /produit/liste
-    controller: App\Controller\ProductController::list
+#app_product_list:
+#    path: /produit/liste
+#    controller: App\Controller\ListProductController::listProduct
