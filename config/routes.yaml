@@ -18,6 +18,10 @@ app_product_search:
     path: /produit/recherche
     controller: App\Controller\SearchProductController::searchProduct
 
+app_product_search__ajaxOperators:
+    path: /produit/recherche/ajaxOperators
+    controller: App\Controller\SearchProductController::getAjaxOperators
+
 #app_product_list:
 #    path: /produit/liste
 #    controller: App\Controller\ListProductController::listProduct

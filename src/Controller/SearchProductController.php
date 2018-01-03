@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /*
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -214,6 +215,15 @@ class SearchProductController extends Controller
           ->getQuery();
 
         return $list_products = $qb->getResult();
+    }
+
+    public function getAjaxOperators(Request $request)
+    {
+        $criteria = $request->request->get('criteria');
+
+        $list_operators = $this->getOperatorsType("integer");
+
+        return new JsonResponse($list_operators);
     }
 
     //Add img foreach product contents into the result
