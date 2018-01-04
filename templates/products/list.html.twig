@@ -11,14 +11,16 @@
 
 {% block body %}
   <div class="col-lg-9">
-    {% if list_products is null %}
+    {% if list_products is empty %}
       <!-- Jumbotron Header -->
       <header class="jumbotron my-4">
-        <h1 class="display-3">Erreur</h1>
+        <h1 class="display-3">Aucun produit</h1>
         <p class="lead">
           Aucun produit ne correspond à vos critères de recherche !
+          <br \>
+          Vous pouvez effectuer une nouvelle recherche.
         </p>
-        <a href="{{ asset('app_product_search')}}" class="btn btn-primary btn-lg">Rechercher un nouveau produit</a>
+        <a href="{{ path('app_product_search')}}" class="btn btn-primary btn-lg">Rechercher un nouveau produit</a>
       </header>
     {% else %}
 

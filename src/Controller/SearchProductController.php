@@ -48,7 +48,7 @@ class SearchProductController extends Controller
             $value_cap = ucfirst($value_cap);
 
             //We call function to make a statement
-            $list_products = $this->search_list_products($product_cap, $criteria, $operator, $value_cap);
+            $list_products = $this->searchProducts($product_cap, $criteria, $operator, $value_cap);
 
             //Redirection ListProductController to display list of products
             //return $this->redirect( $this->generateUrl('sdzblog_voir', array('id' => 5)) );
@@ -217,10 +217,40 @@ class SearchProductController extends Controller
         return $list_products = $qb->getResult();
     }
 
+    //Return the type of criteria selected
+    private function criteriaType($criteria)
+    {
+        switch ($criteria) {
+        case 'Marque':
+            $type = 'integer';
+            break;
+        case 'additives':
+            $type = 'string';
+            break;
+        case 'composer':
+            $field = 'c.lastName';
+            break;
+        case 'year':
+        case 'name':
+        case 'translation':
+        case 'reference':
+        case 'id':
+            $field = 'p.' . $field;
+            // no break
+        default:
+            $type = 'default';
+            break;
+        }
+
+        return $type;
+    }
+
     public function getAjaxOperators(Request $request)
     {
         $criteria = $request->request->get('criteria');
 
+        //$list_operators = $criteria;
+        //$list_operators = $this->criteriaType($criteria);
         $list_operators = $this->getOperatorsType("integer");
 
         return new JsonResponse($list_operators);
