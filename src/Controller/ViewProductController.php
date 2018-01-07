@@ -24,7 +24,7 @@ class ViewProductController extends Controller
     {
         // Retrieve product with his id
         $product = $this->getDoctrine()
-            ->getRepository(Product::class)
+            ->getRepository('App:Product')
             ->find($id);
 
         // Verification if the product exist

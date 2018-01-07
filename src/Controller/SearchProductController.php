@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 /*
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -89,7 +90,7 @@ class SearchProductController extends Controller
           ))
           ->add('operator', ChoiceType::class, array(
               'label' => false,
-              'choices' => $this->getOperators(),
+              'choices' => $this->getOperatorsType('integer'),
               'mapped' => false,
           ))
           ->add('value', TextType::class, array(
@@ -97,6 +98,7 @@ class SearchProductController extends Controller
               'attr' => array(
                   'placeholder' => 'Valeur',
               ),
+              'required' => false,
               'mapped' => false,
           ))
 
@@ -129,15 +131,7 @@ class SearchProductController extends Controller
         return $list_criteria;
     }
 
-    //Return list operators corresponding at type of criteria
-    public function getOperators()
-    {
-        $list_operators = $this->getOperatorsType();
-
-        return $list_operators;
-    }
-
-    public function getOperatorsType($type = null)
+    public function getOperatorsType($type)
     {
         switch ($type) {
           case 'string': $list_operators = array(
@@ -155,6 +149,13 @@ class SearchProductController extends Controller
                             "Supérieur (>)" => "gt",
                           );
                           break;
+
+                        case 'OK':
+                        $list_operators = array(
+                                          "OK" => "OK",
+                                        );
+                                        break;
+
           default: $list_operators = array(
                             null => null,
                             "Contient" => "contain",
@@ -192,6 +193,39 @@ class SearchProductController extends Controller
           return $list_products = $qb->getResult();
       }*/
 
+/*
+    public function searchProducts($product, $criteria, $operator, $value)
+    {
+        $operator_sql = $this->getStatementType('integer', 'le');
+
+        //TEST
+        var_dump($operator_sql);
+//        var_dump($operator);
+
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        //$criteriaType = $this->getCriteriaType($criteria);
+
+        //Limit of results
+        $limit = 30;
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+          ->select('p')
+          ->from('App:NutritionalInformation', 'p')
+          ->where('p.fat_100g < 100')
+          //->where('p.fat_100g' . $operator_sql . $value)
+          //->setParameter('product_name', '%' . $product .'%')
+          //->orderBy('p.product_name', 'ASC')
+          ->setMaxResults($limit)
+          ->getQuery();
+
+        return $list_products = $qb->getResult();
+    }
+*/
+
+
     public function searchProducts($product, $criteria, $operator, $value)
     {
         //TEST
@@ -218,46 +252,87 @@ class SearchProductController extends Controller
     }
 
     //Return the type of criteria selected
-    private function criteriaType($criteria)
+    public function getCriteriaType($criteria)
     {
         switch ($criteria) {
-        case 'Marque':
-            $type = 'integer';
-            break;
-        case 'additives':
-            $type = 'string';
-            break;
-        case 'composer':
-            $field = 'c.lastName';
-            break;
-        case 'year':
-        case 'name':
-        case 'translation':
-        case 'reference':
-        case 'id':
-            $field = 'p.' . $field;
-            // no break
-        default:
-            $type = 'default';
-            break;
+          case 'brand':
+          case 'additives':
+          case 'country_fr':
+          case 'nutrition_grade_fr':
+          case 'ingredient':
+              $type = 'string';
+              break;
+          case 'fat_100g':
+          case 'saturated_fat_100g':
+          case 'sugars_100g':
+              $type = 'integer';
+              break;
+          /*
+          case null:
+              $type = 'string';
+              break;
+          default:
+              $type = 'integer';
+              break;
+          */
         }
 
         return $type;
-    }
+      }
 
     public function getAjaxOperators(Request $request)
     {
+        //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
+        // Retrieve type of criteria
+        //$type = $this->getCriteriaType($criteria);
+        // By type of criteria, we retrieve list of operators
+        //$list_operators = $this->getOperatorsType($type);
 
-        //$list_operators = $criteria;
-        //$list_operators = $this->criteriaType($criteria);
-        $list_operators = $this->getOperatorsType("integer");
-
-        return new JsonResponse($list_operators);
+        //return new JsonResponse($criteria);
+        return new Response($criteria);
     }
 
+    //Returns the operator_sql by type of criteria
+    public function getStatementType($type, $operator)
+    {
+        if($type == 'string')
+        {
+          switch ($operator) {
+            case 'contain':
+              $operator_sql = 'LIKE ';
+              break;
+            case 'no_contain':
+              $operator_sql = 'NOT LIKE ';
+              break;
+          }
+        }
+        else if($type == 'integer')
+        {
+          switch ($operator) {
+            case 'lt':
+              $operator_sql = '<';
+              break;
+            case 'le':
+              $operator_sql = '<=';
+              break;
+            case 'eq':
+              $operator_sql = '=';
+              break;
+            case 'ge':
+              $operator_sql = '>=';
+              break;
+            case 'gt':
+              $operator_sql = '>';
+              break;
+          }
+        }
+
+        return $operator_sql;
+    }
     //Add img foreach product contents into the result
     //DEV
+    /*
     public function addImgProduct()
     {
         //TEST
@@ -283,4 +358,5 @@ class SearchProductController extends Controller
             }
         }
     }
+    */
 }

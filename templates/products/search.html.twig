@@ -45,10 +45,11 @@ $( form_criteria ).change(function() {
 
 //Retrieve the list of operators corresponding at the criteria selected
 function ajaxOperators(criteria) {
+  console.log(criteria);
   $.ajax({
     url: "{{ path('app_product_search__ajaxOperators') }}",
     type: "POST",
-    data: { criteria : criteria },
+    data: criteria,
     contentType: "application/json; charset=utf-8"
   })
   .done(function (data) {
