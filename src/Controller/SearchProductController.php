@@ -36,6 +36,7 @@ class SearchProductController extends Controller
             //Normalization for product_name string
             $product_cap = strtolower($product_name);
             $product_cap = ucfirst($product_cap);
+            $tb_search = explode(' ', $product_cap);
 
             // We call function to make a statement
             //$list_products = $this->search_list_products($product_cap);
@@ -49,7 +50,7 @@ class SearchProductController extends Controller
             $value_cap = ucfirst($value_cap);
 
             //We call function to make a statement
-            $list_products = $this->searchProducts($product_cap, $criteria, $operator, $value_cap);
+            $list_products = $this->searchProducts($tb_search, $criteria, $operator, $value_cap);
 
             //Redirection ListProductController to display list of products
             //return $this->redirect( $this->generateUrl('sdzblog_voir', array('id' => 5)) );
@@ -226,7 +227,7 @@ class SearchProductController extends Controller
 */
 
 
-    public function searchProducts($product, $criteria, $operator, $value)
+    public function searchProducts($tb_search, $criteria, $operator, $value)
     {
         //TEST
         var_dump($operator);
@@ -238,17 +239,30 @@ class SearchProductController extends Controller
         //Limit of results
         $limit = 30;
 
+        //split search in differents products
+        //add the differents words
+        $values_statement = "";
+        foreach ($tb_search as $value) {
+          $values_statement = $values_statement . '%' . $value;
+          //$values_statement = $values_statement . $value;
+        }
+        $values_statement = $values_statement . '%';
+        var_dump($tb_search);
+        echo $values_statement;
+
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
           ->select('p')
           ->from('App:Product', 'p')
           ->where('p.product_name LIKE :product_name')
-          ->setParameter('product_name', '%' . $product .'%')
+          ->setParameter('product_name', $values_statement)
           ->orderBy('p.product_name', 'ASC')
           ->setMaxResults($limit)
           ->getQuery();
 
-        return $list_products = $qb->getResult();
+
+
+          return $list_products = $qb->getResult();
     }
 
     //Return the type of criteria selected
