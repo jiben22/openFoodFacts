@@ -1,0 +1,124 @@
+{# templates/product_information/information.html.twig #}
+
+{% extends "base.html.twig" %}
+
+{% block title %}
+  Ajouter un produit -
+  {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+  <div class="col-lg-9">
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <h3 class="card-title"></h3>
+        <h4>Ajouter un produit</h4>
+        {# Form #}
+        {{ form_start(form) }}
+        <fieldset>
+          <legend>Produit</legend>
+          {{ form_row(form.product_name) }}
+          {{ form_row(form.serving_size) }}
+          {{ form_row(form.ingredients_from_palm_oil_n) }}
+          {{ form_row(form.ingredients_that_may_be_from_palm_oil_n) }}
+        </fiedlset>
+
+        <fieldset>
+          <legend>Additives</legend>
+          {{ form_row(form.additive_fr) }}
+        </fiedlset>
+
+        <fieldset>
+          <legend>Marque</legend>
+          {{ form_row(form.brand) }}
+        </fiedlset>
+
+        <fieldset>
+          <legend>Pays</legend>
+          {{ form_row(form.country_fr) }}
+        </fiedlset>
+
+        <fieldset>
+          <legend>Ingredients</legend>
+          {{ form_row(form.ingredient) }}
+        </fiedlset>
+
+        <fieldset>
+          <legend>Valeurs nutritionnelles</legend>
+          {{ form_row(form.nutrition_grade_fr) }}
+          {{ form_row(form.energy_100g) }}
+          {{ form_row(form.fat_100g) }}
+          {{ form_row(form.saturated_fat_100g) }}
+          {{ form_row(form.cholesterol_100g) }}
+          {{ form_row(form.carbohydrates_100g) }}
+          {{ form_row(form.sugars_100g) }}
+          {{ form_row(form.fiber_100g) }}
+          {{ form_row(form.proteins_100g) }}
+          {{ form_row(form.salt_100g) }}
+          {{ form_row(form.sodium_100g) }}
+          {{ form_row(form.vitamin_a_100g) }}
+          {{ form_row(form.calcium_100g) }}
+          {{ form_row(form.iron_100g) }}
+        </fiedlset>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+
+      </div>
+    </div>
+  </div <!-- /.col-lg-9 -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+//Listen if criteria selected has changed
+$( form_criteria ).change(function() {
+  var criteria = $( "#form_criteria" ).val();
+  //Call Ajax function
+  ajaxOperators( criteria );
+});
+
+//Retrieve the list of operators corresponding at the criteria selected
+function ajaxOperators(criteria) {
+  console.log(criteria);
+  $.ajax({
+    url: "{{ path('app_product_search__ajaxOperators') }}",
+    type: "POST",
+    data: criteria,
+    contentType: "application/json; charset=utf-8"
+  })
+  .done(function (data) {
+    console.log("done");
+    console.log( data );
+    //Call function to replace list of operators in the form
+    changeListOperators( data );
+  })
+  .fail(function () {
+    alert("fail");
+  });
+}
+
+//Replace into the form, the field operator with a list which corresponding at criteria
+function changeListOperators(list_operators)
+{
+  var list = list_operators;
+
+  $select = $( form_operator );
+  //Clean all options in select
+  $select
+    .find('option')
+    .remove()
+  ;
+
+  $.each(list, function(index, value) {
+    $('<option>')
+    .text(index)
+    .attr('value', value)
+    .appendTo($select)
+  });
+}
+</script>
+{% endblock %}
