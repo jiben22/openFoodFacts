@@ -37,22 +37,29 @@ class AddProductController extends Controller
           $ingredients = $data["ingredients"];
           $nutritionalInformation = $data["nutritionalInformation"];
 
-          //TEST
-          //$product = $data["product"];
-          //var_dump($data);
-          //var_dump($product);
-          //var_dump($brand);
-
           // We ADD Product in database
-          $this->addProductInDatabase($product, $additives, $brand, $country, $ingredients, $nutritionalInformation);
+          $product_name = $this->addProductInDatabase($product, $additives, $brand, $country, $ingredients, $nutritionalInformation);
+          //We retrieve id of this product with her namer
+          $id = $this->getProductId($product_name);
 
-          return $this->render('products/search.html.twig', array(
+          //Redirect to the view with the product added
+          return $this->redirect($this->generateUrl('app_product_information', array(
+            'id' => $id,
+          )
         ));
       }
 
       return $this->render('products/add.html.twig', array(
         'form' => $form->createView(),
     ));
+  }
+
+  public function getProductId($product_name)
+  {
+      $repository = $this->getDoctrine()->getRepository(Product::class);
+      $product = $repository->findOneBy(['product_name' => $product_name]);
+
+      return $product->getId();
   }
 
   //Return the fields added in the form to add a product
@@ -204,8 +211,11 @@ class AddProductController extends Controller
       return $form;
   }
 
-  public function addProductInDatabase($product, $additive, $brand, $country, $ingredient, $nutritional_information)
+  public function addProductInDatabase($product, $additives, $brand, $country, $ingredients, $nutritionalInformation)
   {
+
+    $em = $this->getDoctrine()->getManager();
+
     /**
      * Create new PRODUCT
      * @var Product $product
@@ -215,32 +225,32 @@ class AddProductController extends Controller
     $product_cap = ucfirst($product_cap);
     $product->setProductName($product_cap);
     $product->setServingSize($product->getServingSize());
-    $product->setAdditivesN($product->getAdditives_n());
-    $product->setIngredientsFromPalmOilN($product->getIngredients_from_palm_oil_n());
-    $product->setIngredientsThatMayBeFromPalmOilN($product->getIngredients_that_may_be_from_palm_oil_n());
+    //$product->setAdditivesN($product->getAdditivesN());
+    $product->setIngredientsFromPalmOilN($product->getIngredientsFromPalmOilN());
+    $product->setIngredientsThatMayBeFromPalmOilN($product->getIngredientsThatMayBeFromPalmOilN());
 
-    $this->em->persist($product);
+    $em->persist($product);
 
 
     /**
      * Create new ADDITIVES
      * @var Additives $additive
      */
-    $additive->setAdditiveFr($additives->gatAdditives_fr());
+    $additives->setAdditiveFr($additives->getAdditiveFr());
 
-    $this->em->persist($additive);
+    $em->persist($additives);
     //Add the additive at list additives to product
-    $product->addAdditive($additive);
+    $product->addAdditive($additives);
 
 
     /**
      * Create new BRANDS
      * @var Brands $brand
      */
-    $brand->setBrand($brands->getBrands());
-    $brand->setBrandTags($brands->getBrands_tags());
+    $brand->setBrand($brand->getBrand());
+    $brand->setBrandTags($brand->getBrandTags());
 
-    $this->em->persist($brand);
+    $em->persist($brand);
 
     $product->setBrand($brand);
 
@@ -249,9 +259,9 @@ class AddProductController extends Controller
      * Create new COUNTRIES
      * @var Countries $country
      */
-    $country->setCountryFr($countries->getCountries_fr());
+    $country->setCountryFr($country->getCountryFr());
 
-    $this->em->persist($country);
+    $em->persist($country);
 
     $product->setCountry($country);
 
@@ -260,43 +270,45 @@ class AddProductController extends Controller
      * Create new INGREDIENTS
      * @var Ingredients $ingredient
      */
-    $ingredient->setIngredient($ingredients->getIngredients_text());
+    $ingredients->setIngredient($ingredients->getIngredient());
 
-    $this->em->persist($ingredient);
+    $em->persist($ingredients);
     //Add the ingredient at list ingredients to product
-    $product->addIngredient($ingredient);
+    $product->addIngredient($ingredients);
 
 
     /**
      * Create new NUTRIONAL_INFORMATION
      * @var NutritionalInformation $nutritional_information
      */
-    $nutritional_information->setNutritionGradeFr($nutritionalInformation->getNutritiongradefr());
-    $nutritional_information->setEnergy100g($nutritionalInformation->getEnergy100g());
-    $nutritional_information->setFat100g($nutritionalInformation->getFat100g());
-    $nutritional_information->setSaturatedFat100g($nutritionalInformation->getSaturated-fat100g());
-    $nutritional_information->setCholesterol100g($nutritionalInformation->getCholesterol100g());
-    $nutritional_information->setCarbohydrates100g($nutritionalInformation->getCarbohydrates100g());
-    $nutritional_information->setSugars100g($nutritionalInformation->getSugars100g());
-    $nutritional_information->setFiber100g($nutritionalInformation->getFiber100g());
-    $nutritional_information->setProteins100g($nutritionalInformation->getProteins100g());
-    $nutritional_information->setSalt100g($nutritionalInformation->getSalt100g());
-    $nutritional_information->setSodium100g($nutritionalInformation->getSodium100g());
-    $nutritional_information->setVitaminA100g($nutritionalInformation->getVitaminA100g());
-    $nutritional_information->setCalcium100g($nutritionalInformation->getCalcium100g());
-    $nutritional_information->setIron100g($nutritionalInformation->getIron100g());
+    $nutritionalInformation->setNutritionGradeFr($nutritionalInformation->getNutritionGradefr());
+    $nutritionalInformation->setEnergy100g($nutritionalInformation->getEnergy100g());
+    $nutritionalInformation->setFat100g($nutritionalInformation->getFat100g());
+    $nutritionalInformation->setSaturatedFat100g($nutritionalInformation->getSaturatedFat100g());
+    $nutritionalInformation->setCholesterol100g($nutritionalInformation->getCholesterol100g());
+    $nutritionalInformation->setCarbohydrates100g($nutritionalInformation->getCarbohydrates100g());
+    $nutritionalInformation->setSugars100g($nutritionalInformation->getSugars100g());
+    $nutritionalInformation->setFiber100g($nutritionalInformation->getFiber100g());
+    $nutritionalInformation->setProteins100g($nutritionalInformation->getProteins100g());
+    $nutritionalInformation->setSalt100g($nutritionalInformation->getSalt100g());
+    $nutritionalInformation->setSodium100g($nutritionalInformation->getSodium100g());
+    $nutritionalInformation->setVitaminA100g($nutritionalInformation->getVitaminA100g());
+    $nutritionalInformation->setCalcium100g($nutritionalInformation->getCalcium100g());
+    $nutritionalInformation->setIron100g($nutritionalInformation->getIron100g());
 
-    $this->em->persist($nutritional_information);
+    $em->persist($nutritionalInformation);
 
-    $product->setNutritionalInformation($nutritional_information);
+    $product->setNutritionalInformation($nutritionalInformation);
 
     //We flush the product with others entities
     try {
        // ...
-       $this->em->flush();
+       $em->flush();
     }
       catch (UniqueConstraintViolationException $e) {
         // ....
     }
+
+    return $product->getProductName();
   }
 }

@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(name="code", type="bigint")
+     * @ORM\Column(name="code", type="bigint", nullable=true)
      */
     private $code;
 
@@ -219,10 +219,12 @@ class Product
     /**
      * @return integer
      */
+     /*
     public function getAdditivesN()
     {
       return $this->additives_n;
     }
+    */
 
     //Add a method to calculate the number of additives
 
