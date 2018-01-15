@@ -260,8 +260,6 @@ class SearchProductController extends Controller
           ->setMaxResults($limit)
           ->getQuery();
 
-
-
           return $list_products = $qb->getResult();
     }
 
@@ -298,6 +296,7 @@ class SearchProductController extends Controller
     {
         //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
+        var_dump($criteria);
         // Retrieve type of criteria
         //$type = $this->getCriteriaType($criteria);
         // By type of criteria, we retrieve list of operators

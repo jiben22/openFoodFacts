@@ -39,6 +39,7 @@
 //Listen if criteria selected has changed
 $( form_criteria ).change(function() {
   var criteria = $( "#form_criteria" ).val();
+  alert(criteria)
   //Call Ajax function
   ajaxOperators( criteria );
 });
@@ -49,12 +50,15 @@ function ajaxOperators(criteria) {
   $.ajax({
     url: "{{ path('app_product_search__ajaxOperators') }}",
     type: "POST",
-    data: criteria,
+    async: true,
+    data: {criteria: criteria},
     contentType: "application/json; charset=utf-8"
   })
   .done(function (data) {
     console.log("done");
     console.log( data );
+    //TEST
+    alert(data)
     //Call function to replace list of operators in the form
     changeListOperators( data );
   })
