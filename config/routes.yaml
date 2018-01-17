@@ -29,3 +29,7 @@ app_product_search__ajaxOperators:
 app_product_add:
     path: /produit/ajouter
     controller: App\Controller\AddProductController::AddProduct
+
+app_product_modify:
+    path: /produit/modifier
+    controller: App\Controller\ModifyProductController::ModifyProduct
