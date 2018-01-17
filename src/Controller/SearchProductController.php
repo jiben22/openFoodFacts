@@ -37,12 +37,13 @@ class SearchProductController extends Controller
             $product_cap = strtolower($product_name);
             $product_cap = ucfirst($product_cap);
 
-            // We call function to make a statement
-            //$list_products = $this->search_list_products($product_cap);
 
             //Retrieve data from field not mapped
+            //var_dump($form->getData());
             $criteria = $form->get("criteria")->getData();
+            //var_dump($criteria);
             $operator = $form->get("operator")->getData();
+            //var_dump($operator);
             $value = $form->get("value")->getData();
             //Normalization for value
             $value_cap = strtolower($value);
@@ -90,7 +91,7 @@ class SearchProductController extends Controller
           ))
           ->add('operator', ChoiceType::class, array(
               'label' => false,
-              'choices' => $this->getOperatorsType('integer'),
+              'choices' => $this->getOperatorsType('string'),
               'mapped' => false,
           ))
           ->add('value', TextType::class, array(
@@ -135,13 +136,11 @@ class SearchProductController extends Controller
     {
         switch ($type) {
           case 'string': $list_operators = array(
-                            null => null,
                             "Contient" => "contain",
                             "Ne contient pas" => "no_contain",
                           );
                           break;
           case 'integer': $list_operators = array(
-                            null => null,
                             "Inférieur (<)" => "lt",
                             "Inférieur ou égal (<=)" => "le",
                             "Egal (=)" => "eq",
@@ -167,82 +166,75 @@ class SearchProductController extends Controller
         return $list_operators;
     }
 
-
-    /*
-      public function searchProducts($product_name)
-      {
-          // Entity Manager
-          $em = $this->getDoctrine()->getManager();
-
-          //Limit of results
-          $limit = 30;
-
-          // QueryBuilder
-          $qb = $em->createQueryBuilder('p')
-              ->select('p')
-              ->from('App:Product', 'p')
-              ->where('p.product_name LIKE :product_name')
-              //%*% the name of product must contents the word
-              // product_name into the row
-              ->setParameter('product_name', '%' . $product_name .'%')
-              ->orderBy('p.product_name', 'ASC')
-              //TEST
-              ->setMaxResults($limit)
-              ->getQuery();
-
-          return $list_products = $qb->getResult();
-      }*/
-
-/*
-    public function searchProducts($product, $criteria, $operator, $value)
+    public function getEntityCriteria($criteria)
     {
-        $operator_sql = $this->getStatementType('integer', 'le');
+      switch ($criteria) {
+          case 'additives':
+              $entity = 'Additives';
+              break;
+          case 'brand':
+              $entity = 'Brands';
+              break;
+          case 'country_fr':
+              $entity = 'Countries';
+              break;
+          case 'ingredient':
+              $entity = 'Ingredients';
+              break;
+          case 'nutrition_grade_fr':
+          case 'fat_100g':
+          case 'saturated_fat_100g':
+          case 'sugars_100g':
+              $entity = 'NutritionalInformation';
+              break;
+          /*
+          case null:
+              $type = 'string';
+              break;
+          default:
+              $type = 'integer';
+              break;
+          */
+        }
 
-        //TEST
-        var_dump($operator_sql);
-//        var_dump($operator);
-
-        // Entity Manager
-        $em = $this->getDoctrine()->getManager();
-
-        //$criteriaType = $this->getCriteriaType($criteria);
-
-        //Limit of results
-        $limit = 30;
-
-        // QueryBuilder
-        $qb = $em->createQueryBuilder('p')
-          ->select('p')
-          ->from('App:NutritionalInformation', 'p')
-          ->where('p.fat_100g < 100')
-          //->where('p.fat_100g' . $operator_sql . $value)
-          //->setParameter('product_name', '%' . $product .'%')
-          //->orderBy('p.product_name', 'ASC')
-          ->setMaxResults($limit)
-          ->getQuery();
-
-        return $list_products = $qb->getResult();
+        return $entity;
     }
-*/
-
 
     public function searchProducts($product, $criteria, $operator, $value)
     {
         //TEST
-        var_dump($operator);
+        //var_dump($product);
+        //var_dump($criteria);
+        //var_dump($operator);
+        //var_dump($value);
+
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
-        //$criteriaType = $this->getCriteriaType($criteria);
+        //We retrieve the entity of criteria
+        $entity = $this->getEntityCriteria($criteria);
+        //We retrieve type of criteria
+        $type = $this->getCriteriaType($criteria);
+        //We retrieve the operator sql
+        //var_dump($type);
+        $operator_sql = $this->getStatementType($type, $operator);
 
         //Limit of results
         $limit = 30;
 
+        //TEST
+        var_dump($criteria);
+        var_dump($operator_sql);
+        var_dump($value);
+
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
           ->select('p')
+          //->select('p', 'other')
           ->from('App:Product', 'p')
+          //->leftJoin("App:" . $entity, 'other')
           ->where('p.product_name LIKE :product_name')
+          //->andWhere('other.' . $criteria . ' ' . $operator_sql . ' ' . $value)
           ->setParameter('product_name', '%' . $product .'%')
           ->orderBy('p.product_name', 'ASC')
           ->setMaxResults($limit)
@@ -285,12 +277,11 @@ class SearchProductController extends Controller
         //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
         // Retrieve type of criteria
-        //$type = $this->getCriteriaType($criteria);
+        $type = $this->getCriteriaType($criteria);
         // By type of criteria, we retrieve list of operators
-        //$list_operators = $this->getOperatorsType($type);
+        $list_operators = $this->getOperatorsType($type);
 
-        //return new JsonResponse($criteria);
-        return new Response($criteria);
+        return new JsonResponse($list_operators);
     }
 
     //Returns the operator_sql by type of criteria

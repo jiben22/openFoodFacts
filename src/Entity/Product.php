@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(name="code", type="bigint", nullable=true)
+     * @ORM\Column(name="code", type="bigint")
      */
     private $code;
 

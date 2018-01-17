@@ -213,6 +213,12 @@ class AddProductController extends Controller
 
   public function addProductInDatabase($product, $additives, $brand, $country, $ingredients, $nutritionalInformation)
   {
+    var_dump($product);
+    var_dump($additives);
+    var_dump($brand);
+    var_dump($country);
+    var_dump($ingredients);
+    var_dump($nutritionalInformation);
 
     $em = $this->getDoctrine()->getManager();
 

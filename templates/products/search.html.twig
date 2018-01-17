@@ -39,33 +39,37 @@
 //Listen if criteria selected has changed
 $( form_criteria ).change(function() {
   var criteria = $( "#form_criteria" ).val();
+  //TEST
+  //alert(criteria)
   //Call Ajax function
-  ajaxOperators( criteria );
+  ajaxOperators(criteria);
 });
 
 //Retrieve the list of operators corresponding at the criteria selected
 function ajaxOperators(criteria) {
-  console.log(criteria);
+  //console.log(criteria);
   $.ajax({
     url: "{{ path('app_product_search__ajaxOperators') }}",
     type: "POST",
-    data: criteria,
-    contentType: "application/json; charset=utf-8"
+    data: {criteria: criteria},
+    //contentType: "application/json; charset=utf-8"
   })
   .done(function (data) {
-    console.log("done");
-    console.log( data );
+    //console.log("done");
+    //alert( data );
     //Call function to replace list of operators in the form
     changeListOperators( data );
   })
   .fail(function () {
-    alert("fail");
+    //alert("fail");
   });
 }
 
 //Replace into the form, the field operator with a list which corresponding at criteria
 function changeListOperators(list_operators)
 {
+  //TEST
+  //alert(list_operators);
   var list = list_operators;
 
   $select = $( form_operator );
