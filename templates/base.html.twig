@@ -68,10 +68,12 @@
           <p class="card-text">
             Open Food Facts répertorie les produits alimentaires du monde entier.
           </p>
+
           <!-- Jumbotron Header -->
-            <a href="{{ path('app_product_add')}}" class="btn btn-primary btn-lg">Ajouter un produit</a>
-            {#<a href="#" class="btn btn-primary btn-lg">Se connecter</a>#}
-        </div>
+          <a href="{{ path('app_product_add')}}" class="btn btn-primary btn-lg">Ajouter un produit</a>
+          {% block buttonsAction %}
+          {% endblock %}
+          </div>
         <!-- /.col-lg-3 -->
 
         {% block body %}{% endblock %}

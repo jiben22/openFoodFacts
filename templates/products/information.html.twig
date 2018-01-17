@@ -7,9 +7,19 @@
   - Informations produit
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
-
+{% block stylesheets %}
+  <style>
+    a.btn{
+      margin-bottom: 10px;
+    }
+  </style>
+{% endblock %}
+{% block buttonsAction %}
+  <!-- Jumbotron Header -->
+  <a href="{{ path('app_product_modify')}}" class="btn btn-primary btn-lg">Modifier le produit</a>
+{% endblock %}
 {% block body %}
+
   <div class="col-lg-9">
 
     <div class="card mt-4">
@@ -19,17 +29,17 @@
         {% set brand = product.brand.brand %}
         {% set originIngredients = product.country.countryFr %}
 
-        {# Validation if one of characteristics is not null #}
-        {% if (brand is not null)
-          or(originIngredients is not null) %}
+        {# Validation if one of characteristics is not empty #}
+        {% if (brand is not empty)
+          or(originIngredients is not empty) %}
           <h4>Caractéristiques du produit</h4>
-          {% if (brand is not null) %}
+          {% if (brand is not empty) %}
             <p>
               Marque:
               {{ brand }}
             </p>
           {% endif %}
-          {% if (originIngredients is not null) %}
+          {% if (originIngredients is not empty) %}
             <p>
               Origine des ingrédients:
               {{ originIngredients }}
@@ -43,11 +53,11 @@
         {% set ingredientsMayPalmOil = product.ingredientsThatMayBeFromPalmOilN %}
         {% set listAdditives = product.additives %}
 
-        {# Validation if one of part of ingredients is not null #}
-        {% if (listIngredients is not null)
-          or(ingredientsPalmOil is not null)or(ingredientsMayPalmOil is not null)or(listAdditives is not null) %}
+        {# Validation if one of part of ingredients is not empty #}
+        {% if (listIngredients is not empty)
+          or(ingredientsPalmOil is not empty)or(ingredientsMayPalmOil is not empty)or(listAdditives is not empty) %}
           <h4>Ingrédients</h4>
-          {% if (listIngredients is not null) %}
+          {% if (listIngredients is not empty) %}
             <p>
               <em>→ Les ingredients sont listés par ordre d'importance (quantité).</em>
               Liste des ingrédients:
@@ -56,19 +66,19 @@
               {% endfor %}
             </p>
           {% endif %}
-          {% if (ingredientsPalmOil is not null) %}
+          {% if (ingredientsPalmOil is not empty) %}
             <p>
               Nombre d'ingrédients provenant de l'huile de palme:
               {{ ingredientsPalmOil }}
             </p>
           {% endif %}
-          {% if (ingredientsMayPalmOil is not null) %}
+          {% if (ingredientsMayPalmOil is not empty) %}
             <p>
               Nombre d'ingrédients qui peuvent provenir de l'huile de palme:
               {{ ingredientsMayPalmOil }}
             </p>
           {% endif %}
-          {% if (listAdditives is not null) %}
+          {% if (listAdditives is not empty) %}
             <p>
               Additives:
               <ul>
@@ -101,10 +111,10 @@
         {% set calcium_100g = nutritionalInformation.calcium100g %}
         {% set iron_100g = nutritionalInformation.iron100g %}
 
-        {# Validation if one of characteristics is not null #}
-        {% if (nutriscore is not null)
-          or(servingSize is not null)
-        or(nutritionalInformation is not null) %}
+        {# Validation if one of characteristics is not empty #}
+        {% if (nutriscore is not empty)
+          or(servingSize is not empty)
+        or(nutritionalInformation is not empty) %}
           <h4>Informations nutrionnelles</h4>
           {% if nutriscore == 'a' %}
             <img src="{{ asset('img/nutriscore/nutriscore-a.svg') }}" alt="Nutriscore A">
@@ -119,9 +129,9 @@
           {% endif %}
 
           <h4>Repères nutritionnels pour 100 g</h4>
-          {% if nutritionalInformation is not null %}
+          {% if nutritionalInformation is not empty %}
             <ul>
-              {% if fat_100g is not null %}
+              {% if fat_100g is not empty %}
                 {% if fat_100g < 0 %}
                   <li>
                     <img src="{{ asset('img/nutrient_levels/low.svg')}}" alt="Faible quantité"/>
@@ -150,7 +160,7 @@
               {% endif %}
             {% endif %}
           </ul>
-          {% if (servingSize is not null) %}
+          {% if (servingSize is not empty) %}
             <p>
               Portion:
               {{ servingSize }}
