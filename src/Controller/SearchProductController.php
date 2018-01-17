@@ -53,17 +53,10 @@ class SearchProductController extends Controller
             $list_products = $this->searchProducts($product_cap, $criteria, $operator, $value_cap);
 
             //Redirection ListProductController to display list of products
-            //return $this->redirect( $this->generateUrl('sdzblog_voir', array('id' => 5)) );
             return $this->forward('App\Controller\ListProductController::listProduct', array(
               'list_products' => $list_products,
               //'img_small' => $img_small,
           ));
-            /*
-            return $this->render('products/list.html.twig', array(
-                'list_products' => $list_products,
-                //'img_small' => $img_small,
-            ));
-            */
         }
 
         return $this->render('products/search.html.twig', array(
@@ -71,8 +64,59 @@ class SearchProductController extends Controller
       ));
     }
 
+    public function searchProducts($product, $criteria, $operator, $value)
+    {
+        //TEST
+        //var_dump($product);
+        //var_dump($criteria);
+        //var_dump($operator);
+        //var_dump($value);
+
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        //We retrieve the entity of criteria
+        $entity = $this->getEntityCriteria($criteria);
+        //We retrieve type of criteria
+        $type = $this->getCriteriaType($criteria);
+        //We retrieve the operator sql
+        var_dump($type);
+        var_dump($operator);
+        $operator_sql = $this->getStatementType($type, $operator);
+
+        //Limit of results
+        $limit = 30;
+
+        //TEST
+        //var_dump($criteria);
+        //var_dump($operator_sql);
+        //var_dump($value);
+
+        echo("App:" . $entity . 'other');
+        echo('<br />');
+        echo('other.' . $criteria . ' ' . $operator_sql . ' \'%' . $value . '%\'');
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+          //->select('p')
+          ->select('p', 'other')
+          ->from('App:Product', 'p')
+          //->leftJoin("App:" . $entity, 'other')
+          ->leftJoin("App:" . $entity, 'other')
+          ->where('p.product_name LIKE :product_name')
+          //->andWhere('other.brand LIKE :other')
+          //->andWhere('other.' . $criteria . ' ' . $operator_sql .)
+          ->andWhere('other.' . $criteria . ' ' . $operator_sql . ' \'%' . $value . '%\'')
+          ->setParameter('product_name', '%' . $product .'%')
+          //->setParameter('other', '%Griz%')
+          //>orderBy('p.product_name', 'ASC')
+          //->setMaxResults($limit)
+          ->getQuery();
+
+        return $list_products = $qb->getResult();
+    }
+
     //Return the fields added in the form to search a product
-    //DEV
     public function getForm()
     {
         $product = new Product();
@@ -200,49 +244,6 @@ class SearchProductController extends Controller
         return $entity;
     }
 
-    public function searchProducts($product, $criteria, $operator, $value)
-    {
-        //TEST
-        //var_dump($product);
-        //var_dump($criteria);
-        //var_dump($operator);
-        //var_dump($value);
-
-        // Entity Manager
-        $em = $this->getDoctrine()->getManager();
-
-        //We retrieve the entity of criteria
-        $entity = $this->getEntityCriteria($criteria);
-        //We retrieve type of criteria
-        $type = $this->getCriteriaType($criteria);
-        //We retrieve the operator sql
-        //var_dump($type);
-        $operator_sql = $this->getStatementType($type, $operator);
-
-        //Limit of results
-        $limit = 30;
-
-        //TEST
-        var_dump($criteria);
-        var_dump($operator_sql);
-        var_dump($value);
-
-        // QueryBuilder
-        $qb = $em->createQueryBuilder('p')
-          ->select('p')
-          //->select('p', 'other')
-          ->from('App:Product', 'p')
-          //->leftJoin("App:" . $entity, 'other')
-          ->where('p.product_name LIKE :product_name')
-          //->andWhere('other.' . $criteria . ' ' . $operator_sql . ' ' . $value)
-          ->setParameter('product_name', '%' . $product .'%')
-          ->orderBy('p.product_name', 'ASC')
-          ->setMaxResults($limit)
-          ->getQuery();
-
-        return $list_products = $qb->getResult();
-    }
-
     //Return the type of criteria selected
     public function getCriteriaType($criteria)
     {
@@ -287,7 +288,7 @@ class SearchProductController extends Controller
     //Returns the operator_sql by type of criteria
     public function getStatementType($type, $operator)
     {
-        if($type == 'string')
+        if($type === 'string')
         {
           switch ($operator) {
             case 'contain':
@@ -298,7 +299,7 @@ class SearchProductController extends Controller
               break;
           }
         }
-        else if($type == 'integer')
+        else if($type === 'integer')
         {
           switch ($operator) {
             case 'lt':

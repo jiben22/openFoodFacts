@@ -7,7 +7,25 @@
   {{ parent() }}
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+<style>
+  input {
+    margin-left: 9px;
+  }
+
+  label {
+      margin-top: 30px;
+  }
+
+  legend {
+      margin-top: 25px;
+  }
+
+  button {
+      margin-top: 50px;
+  }
+</style>
+{% endblock %}
 
 {% block body %}
   <div class="col-lg-9">
