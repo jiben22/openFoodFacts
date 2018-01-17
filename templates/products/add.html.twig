@@ -7,7 +7,13 @@
   {{ parent() }}
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+  <style>
+    input{
+        margin-left: 10px;
+    }
+  </style>
+{% endblock %}
 
 {% block body %}
   <div class="col-lg-9">

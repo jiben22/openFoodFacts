@@ -82,7 +82,7 @@ class AddProductController extends Controller
       // We create the form with createFormBuilder
       $form = $this->createFormBuilder($data)
         ->add('product_name', TextType::class, array(
-          'label' => 'Nom du produit',
+          'label' => 'Nom du produit *',
           'required' => true,
         ))
 
@@ -103,30 +103,25 @@ class AddProductController extends Controller
 
         //ADDITIVES
         ->add('additive_fr', TextType::class, array(
-          'label' => 'Nom des additives ++',
+          'label' => 'Nom des additifs',
           'required' => false,
         ))
 
         //BRANDS
         ->add('brand', TextType::class, array(
-          'label' => 'Marque',
-          'required' => false,
+          'label' => 'Marque *',
+          'required' => true,
         ))
 
         //COUNTRIES
-        ->add('country_fr', ChoiceType::class, array(
+        ->add('country_fr', TextType::class, array(
           'label' => 'Pays',
-          'choices' => array(
-              "Pays1" => "1",
-              "Pays2" => "2",
-              "Pays3" => "3",
-          ),
           'required' => false,
         ))
 
         //INGREDIENTS
         ->add('ingredient', TextType::class, array(
-          'label' => 'Ingrédients ++',
+          'label' => 'Ingrédients',
           'required' => false,
         ))
 
