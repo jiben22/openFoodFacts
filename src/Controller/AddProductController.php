@@ -211,8 +211,6 @@ class AddProductController extends Controller
 
   public function addProductInDatabase($data)
   {
-    var_dump($data);
-    var_dump($data["product_name"]);
 
 
     $em = $this->getDoctrine()->getManager();
