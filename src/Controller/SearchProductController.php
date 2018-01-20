@@ -8,13 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-/*
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
-*/
+
 use App\Entity\Product;
 
 class SearchProductController extends Controller
@@ -67,8 +61,40 @@ class SearchProductController extends Controller
       ));
     }
 
+    public function searchProducts($tb_search, $criteria, $operator, $value)
+    {
+        //Limit of results
+        $limit = 15;
+
+        //split search in differents products
+        //add the differents words
+        $values_statement = "";
+        foreach ($tb_search as $value) {
+          $values_statement = $values_statement . '%' . $value;
+          //$values_statement = $values_statement . $value;
+        }
+        $values_statement = $values_statement . '%';
+        //var_dump($tb_search);
+        //echo $values_statement;
+
+
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+          ->select('p')
+          ->from('App:Product', 'p')
+          ->where('p.product_name LIKE :product_name')
+          ->setParameter('product_name', $values_statement)
+          ->orderBy('p.product_name', 'ASC')
+          ->setMaxResults($limit)
+          ->getQuery();
+
+          return $list_products = $qb->getResult();
+    }
+
     //Return the fields added in the form to search a product
-    //DEV
     public function getForm()
     {
         $product = new Product();
@@ -162,101 +188,6 @@ class SearchProductController extends Controller
         }
 
         return $list_operators;
-    }
-
-
-    /*
-      public function searchProducts($product_name)
-      {
-          // Entity Manager
-          $em = $this->getDoctrine()->getManager();
-
-          //Limit of results
-          $limit = 30;
-
-          // QueryBuilder
-          $qb = $em->createQueryBuilder('p')
-              ->select('p')
-              ->from('App:Product', 'p')
-              ->where('p.product_name LIKE :product_name')
-              //%*% the name of product must contents the word
-              // product_name into the row
-              ->setParameter('product_name', '%' . $product_name .'%')
-              ->orderBy('p.product_name', 'ASC')
-              //TEST
-              ->setMaxResults($limit)
-              ->getQuery();
-
-          return $list_products = $qb->getResult();
-      }*/
-
-/*
-    public function searchProducts($product, $criteria, $operator, $value)
-    {
-        $operator_sql = $this->getStatementType('integer', 'le');
-
-        //TEST
-        var_dump($operator_sql);
-//        var_dump($operator);
-
-        // Entity Manager
-        $em = $this->getDoctrine()->getManager();
-
-        //$criteriaType = $this->getCriteriaType($criteria);
-
-        //Limit of results
-        $limit = 30;
-
-        // QueryBuilder
-        $qb = $em->createQueryBuilder('p')
-          ->select('p')
-          ->from('App:NutritionalInformation', 'p')
-          ->where('p.fat_100g < 100')
-          //->where('p.fat_100g' . $operator_sql . $value)
-          //->setParameter('product_name', '%' . $product .'%')
-          //->orderBy('p.product_name', 'ASC')
-          ->setMaxResults($limit)
-          ->getQuery();
-
-        return $list_products = $qb->getResult();
-    }
-*/
-
-
-    public function searchProducts($tb_search, $criteria, $operator, $value)
-    {
-        //TEST
-        //var_dump($operator);
-        // Entity Manager
-        $em = $this->getDoctrine()->getManager();
-
-        //$criteriaType = $this->getCriteriaType($criteria);
-
-        //Limit of results
-        $limit = 30;
-
-        //split search in differents products
-        //add the differents words
-        $values_statement = "";
-        foreach ($tb_search as $value) {
-          $values_statement = $values_statement . '%' . $value;
-          //$values_statement = $values_statement . $value;
-        }
-        $values_statement = $values_statement . '%';
-        //var_dump($tb_search);
-        //echo $values_statement;
-
-        // QueryBuilder
-        $qb = $em->createQueryBuilder('p')
-          ->select('p')
-          ->from('App:Product', 'p')
-          ->where('p.product_name LIKE :product_name')
-          ->setParameter('product_name', $values_statement)
-          ->orderBy('p.product_name', 'ASC')
-          ->setMaxResults($limit)
-          ->getQuery();
-
-          return $list_products = $qb->getResult();
     }
 
     //Return the type of criteria selected
