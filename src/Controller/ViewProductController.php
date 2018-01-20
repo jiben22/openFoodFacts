@@ -15,7 +15,7 @@ class ViewProductController extends Controller
         $product = $this->getProduct($id);
 
         // renders templates/product_information/information.html.twig
-        return $this->render('products/information.html.twig', array(
+        return $this->render('products/view.html.twig', array(
             'product' => $product
         ));
     }
