@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -102,8 +103,12 @@ class AddProductController extends Controller
         ))
 
         //ADDITIVES
-        ->add('additive_fr', TextType::class, array(
+        ->add('additive_fr', TextareaType::class, array(
           'label' => 'Nom des additifs',
+          'attr' => array(
+            'placeholder' => 'Veuillez mettre une virgule après chaque additif',
+            'cols' => '50', 'rows' => '3',
+          ),
           'required' => false,
         ))
 
@@ -120,8 +125,12 @@ class AddProductController extends Controller
         ))
 
         //INGREDIENTS
-        ->add('ingredient', TextType::class, array(
+        ->add('ingredient', TextareaType::class, array(
           'label' => 'Ingrédients',
+          'attr' => array(
+            'placeholder' => 'Veuillez mettre une virgule après chaque ingrédient',
+            'cols' => '70', 'rows' => '3',
+          ),
           'required' => false,
         ))
 
@@ -211,8 +220,6 @@ class AddProductController extends Controller
 
   public function addProductInDatabase($data)
   {
-
-
     $em = $this->getDoctrine()->getManager();
 
     /**

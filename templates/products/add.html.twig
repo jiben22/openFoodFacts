@@ -9,10 +9,80 @@
 
 {% block stylesheets %}
   <style>
-    input{
-        margin-left: 10px;
-    }
-  </style>
+
+  input {
+    margin-left: 10px;
+  }
+
+  fieldset
+  {
+    margin-top: 25px;
+  }
+
+  .product input#form_product_name {
+    margin-left: 0px;
+    width: 400px;
+  }
+
+  .product #form_serving_size {
+    margin-left: 74px;
+    width: 100px;
+  }
+
+  .product #form_ingredients_from_palm_oil_n, .product #form_ingredients_that_may_be_from_palm_oil_n {
+    margin-left: 5px;
+    width: 70px;
+  }
+
+  .product #form_ingredients_from_palm_oil_n {
+    margin-left: 53px;
+  }
+
+  .additives > label {
+    margin-right: 500px;
+  }
+
+  #form_brand {
+    width: 270px;
+  }
+
+  #form_country_fr {
+    width: 170px;
+  }
+
+  .ingredients > label {
+    margin-right: 500px;
+  }
+
+  .nutritional_information div label:nth-child(1) {
+    position: absolute;
+    right: 670px;
+  }
+  .nutritional_information div input {
+    margin-left: 150px;
+    width: 100px;
+  }
+
+  .nutritional_information div label:nth-child(3) {
+    position: absolute;
+    right: 415px;
+  }
+
+  select#form_nutrition_grade_fr
+  {
+    margin-left: 150px;
+  }
+
+  #fields_necessary
+  {
+    margin-top: 40px;
+  }
+
+  button#form_save
+  {
+    margin-top: 17px;
+  }
+</style>
 {% endblock %}
 
 {% block body %}
@@ -26,57 +96,108 @@
         {{ form_start(form) }}
         <fieldset>
           <legend>Produit</legend>
-          {{ form_row(form.product_name) }}
-          {{ form_row(form.serving_size) }}
-          {{ form_row(form.ingredients_from_palm_oil_n) }}
-          {{ form_row(form.ingredients_that_may_be_from_palm_oil_n) }}
+          <div class="product">
+            {{ form_label(form.product_name) }}
+            {{ form_widget(form.product_name) }}
+            {{ form_row(form.serving_size) }}
+            {{ form_label(form.ingredients_from_palm_oil_n) }}
+            {{ form_widget(form.ingredients_from_palm_oil_n) }}
+            {{ form_label(form.ingredients_that_may_be_from_palm_oil_n) }}
+            {{ form_widget(form.ingredients_that_may_be_from_palm_oil_n) }}
+          </div>
         </fiedlset>
 
         <fieldset>
           <legend>Additives</legend>
-          {{ form_row(form.additive_fr) }}
+          <div class="additives">
+            {{ form_label(form.additive_fr) }}
+            {{ form_widget(form.additive_fr) }}
+          </div>
         </fiedlset>
 
         <fieldset>
           <legend>Marque</legend>
-          {{ form_row(form.brand) }}
+          {{ form_label(form.brand) }}
+          {{ form_widget(form.brand) }}
         </fiedlset>
 
         <fieldset>
           <legend>Pays</legend>
-          {{ form_row(form.country_fr) }}
+          {{ form_label(form.country_fr) }}
+          {{ form_widget(form.country_fr) }}
         </fiedlset>
 
         <fieldset>
           <legend>Ingredients</legend>
-          {{ form_row(form.ingredient) }}
+          <div class="ingredients">
+            {{ form_label(form.ingredient) }}
+            {{ form_widget(form.ingredient) }}
+          </div>
         </fiedlset>
 
         <fieldset>
           <legend>Valeurs nutritionnelles (pour 100g)</legend>
-          {{ form_row(form.nutrition_grade_fr) }}
-          {{ form_row(form.energy_100g) }}
-          {{ form_row(form.fat_100g) }}
-          {{ form_row(form.saturated_fat_100g) }}
-          {{ form_row(form.cholesterol_100g) }}
-          {{ form_row(form.carbohydrates_100g) }}
-          {{ form_row(form.sugars_100g) }}
-          {{ form_row(form.fiber_100g) }}
-          {{ form_row(form.proteins_100g) }}
-          {{ form_row(form.salt_100g) }}
-          {{ form_row(form.sodium_100g) }}
-          {{ form_row(form.vitamin_a_100g) }}
-          {{ form_row(form.calcium_100g) }}
-          {{ form_row(form.iron_100g) }}
-        </fiedlset>
+          <div class="nutritional_information">
+            {{ form_row(form.nutrition_grade_fr) }}
 
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
+            <div>
+              {{ form_label(form.energy_100g) }}
+              {{ form_widget(form.energy_100g) }}
+              {{ form_label(form.fat_100g) }}
+              {{ form_widget(form.fat_100g) }}
+            </div>
 
+            <div>
+              {{ form_label(form.saturated_fat_100g) }}
+              {{ form_widget(form.saturated_fat_100g) }}
+              {{ form_label(form.cholesterol_100g) }}
+              {{ form_widget(form.cholesterol_100g) }}
+            </div>
+
+            <div>
+              {{ form_label(form.carbohydrates_100g) }}
+              {{ form_widget(form.carbohydrates_100g) }}
+              {{ form_label(form.sugars_100g) }}
+              {{ form_widget(form.sugars_100g) }}
+            </div>
+
+            <div>
+              {{ form_label(form.fiber_100g) }}
+              {{ form_widget(form.fiber_100g) }}
+              {{ form_label(form.proteins_100g) }}
+              {{ form_widget(form.proteins_100g) }}
+            </div>
+
+            <div>
+              {{ form_label(form.salt_100g) }}
+              {{ form_widget(form.salt_100g) }}
+              {{ form_label(form.sodium_100g) }}
+              {{ form_widget(form.sodium_100g) }}
+            </div>
+
+            <div>
+              {{ form_label(form.vitamin_a_100g) }}
+              {{ form_widget(form.vitamin_a_100g) }}
+              {{ form_label(form.calcium_100g) }}
+              {{ form_widget(form.calcium_100g) }}
+            </div>
+
+            <div>
+              {{ form_label(form.iron_100g) }}
+              {{ form_widget(form.iron_100g) }}
+          </div>
+
+          </fiedlset>
+
+          <label id="fields_necessary">
+          <strong>*</strong>champs obligatoires</label>
+
+          {{ form_rest(form) }}
+          {{ form_end(form) }}
+        </div>
       </div>
     </div>
-  </div <!-- /.col-lg-9 -->
-{% endblock %}
+  </div <!-- /.col-lg-9 --> {% endblock %}
 
 {% block javascripts %}
 <script>
