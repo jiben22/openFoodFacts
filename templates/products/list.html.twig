@@ -32,9 +32,9 @@
             <a href="{{ path('app_product_information', {'id': product.getId}) }}">
               <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card">
-                  {% if img_small is defined %}
+                  {% if list_img[product.code] is defined %}
                     {# Validation if img exist #}
-                    <img class="card-img-top" src="{{ img_small }}" alt="" width="auto" height="auto">
+                    <img class="card-img-top" src="{{ list_img[product.code]['img'] }}" alt="{{ product.getProductName }}" width="50" height="250">
                   {% else %}
                     <img class="card-img-top" src="{{ asset('img/no_img.png') }}" alt="Aucune image" width="253" height="164">
                   {% endif %}

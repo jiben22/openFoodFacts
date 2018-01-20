@@ -52,18 +52,14 @@ class SearchProductController extends Controller
             //We call function to make a statement
             $list_products = $this->searchProducts($tb_search, $criteria, $operator, $value_cap);
 
+            //Create list of img for products
+            $list_img = $this->getImg($list_products);
+
             //Redirection ListProductController to display list of products
-            //return $this->redirect( $this->generateUrl('sdzblog_voir', array('id' => 5)) );
             return $this->forward('App\Controller\ListProductController::listProduct', array(
               'list_products' => $list_products,
-              //'img_small' => $img_small,
+              'list_img' => $list_img,
           ));
-            /*
-            return $this->render('products/list.html.twig', array(
-                'list_products' => $list_products,
-                //'img_small' => $img_small,
-            ));
-            */
         }
 
         return $this->render('products/search.html.twig', array(
@@ -230,7 +226,7 @@ class SearchProductController extends Controller
     public function searchProducts($tb_search, $criteria, $operator, $value)
     {
         //TEST
-        var_dump($operator);
+        //var_dump($operator);
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
@@ -247,8 +243,8 @@ class SearchProductController extends Controller
           //$values_statement = $values_statement . $value;
         }
         $values_statement = $values_statement . '%';
-        var_dump($tb_search);
-        echo $values_statement;
+        //var_dump($tb_search);
+        //echo $values_statement;
 
         // QueryBuilder
         $qb = $em->createQueryBuilder('p')
@@ -296,7 +292,7 @@ class SearchProductController extends Controller
     {
         //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
-        var_dump($criteria);
+        //var_dump($criteria);
         // Retrieve type of criteria
         //$type = $this->getCriteriaType($criteria);
         // By type of criteria, we retrieve list of operators
@@ -343,13 +339,11 @@ class SearchProductController extends Controller
 
         return $operator_sql;
     }
-    //Add img foreach product contents into the result
-    //DEV
-    /*
-    public function addImgProduct()
+
+    //Add img foreach product contents into the result (if exist)
+    public function getImg($list_products)
     {
-        //TEST
-        // It's necessary to create an array for stockage for products img
+        $list_img = null;
 
         //Recover image for each product
         foreach ($list_products as $key => $product) {
@@ -359,17 +353,19 @@ class SearchProductController extends Controller
             $json = file_get_contents('https://world.openfoodfacts.org/api/v0/product/'. $code .'.json');
             $data_json = json_decode($json, true);
 
-            //TEST
-            var_dump($data_json);
-            echo '********************************************************************************************';
-
-            if (isset($data_json['product']) && isset($data_json['product']['image_front_url'])) {
-                //Recover url for img small
-                $img_small = $data_json['product']['image_front_url'];
-                //$list_products['img'] = $img_small;
-            //Boolean which woudl say if img exist or no
+            //Verification if img exists
+            if( ($data_json['status'] === 1) || ($data_json['status_verbose'] === 'product found') )
+            {
+                if( isset($data_json['product']['image_small_url']) )
+                {
+                    //Add img for this product into list products
+                    $list_img['code'] = $code;
+                    $list_img[$code]['img'] = $data_json['product']['image_small_url'];
+                }
             }
         }
+
+        //Return the list of img product with [code][img]
+        return $list_img;
     }
-    */
 }
