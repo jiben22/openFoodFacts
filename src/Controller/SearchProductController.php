@@ -75,12 +75,12 @@ class SearchProductController extends Controller
         //add the differents words
         $values_statement = "";
         foreach ($tb_search as $tb_value) {
-          $values_statement = $values_statement . '%' . $tb_value;
-          //$values_statement = $values_statement . $value;
+            $values_statement = $values_statement . '%' . $tb_value;
+            //$values_statement = $values_statement . $value;
         }
         $values_statement = $values_statement . '%';
         //var_dump($tb_search);
-        echo $values_statement;
+        //echo $values_statement;
 
         //Limit of results
         $limit = 15;
@@ -88,8 +88,26 @@ class SearchProductController extends Controller
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
+        //If all is empty ! (fucking user !)
+        if ($value == null && $tb_search[0] === "") {
+            //DEV
+            $min = 1945;
+            $max = 20849;
+            $offset = rand($min, $max);
 
-        $qb = $em->createQueryBuilder('p')
+            echo "Aucun champ de rempli";
+            $qb = $em->createQueryBuilder('All_empty')
+            ->select('p')
+            ->from('App:Product', 'p')
+            ->orderBy('p.product_name', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery();
+        }
+        //If value is null
+        elseif ($value == null) {
+            echo "Value = null";
+            $qb = $em->createQueryBuilder('value_null')
             ->select('p')
             ->from('App:Product', 'p')
             ->where('p.product_name LIKE :product_name')
@@ -97,8 +115,24 @@ class SearchProductController extends Controller
             ->orderBy('p.product_name', 'ASC')
             ->setMaxResults($limit)
             ->getQuery();
+        }
+        //product_name of value (criteria) is not empty !
+        else {
+            //Recover entity for this criteria
+            $entity = $this->getEntity($criteria);
 
-          return $list_products = $qb->getResult();
+          $qb = $em->createQueryBuilder('nothing_empty')
+            ->select('p')
+            ->from('App:Product', 'p')
+            ->innerJoin('App:' . $entity, 'criteria')
+            ->andWhere('p.product_name LIKE :product_name')
+            ->setParameter('product_name', $values_statement)
+            ->orderBy('p.product_name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery();
+        }
+
+        return $list_products = $qb->getResult();
     }
 
     //Return the fields added in the form to search a product
@@ -120,7 +154,7 @@ class SearchProductController extends Controller
           ))
           ->add('operator', ChoiceType::class, array(
               'label' => false,
-              'choices' => $this->getOperatorsType('integer'),
+              'choices' => $this->getOperatorsType('string'),
               'mapped' => false,
           ))
           ->add('value', TextType::class, array(
@@ -159,6 +193,33 @@ class SearchProductController extends Controller
         );
 
         return $list_criteria;
+    }
+
+    public function getEntity($criteria)
+    {
+        switch ($criteria) {
+        case 'brand':
+          $entity = 'Brands';
+          break;
+        case 'additives':
+          $entity = 'Additives';
+          break;
+        case 'country_fr':
+          $entity = 'Countries';
+          break;
+        case 'nutrition_grade_fr':
+        case 'fat_100g':
+        case 'saturated_fat_100g':
+        case 'sugars_100g':
+        case 'salt_100g':
+          $entity = 'NutritionalInformation';
+          break;
+        case 'ingredient':
+          $entity = 'Ingredients';
+          break;
+      }
+
+        return $entity;
     }
 
     public function getOperatorsType($type)
@@ -210,7 +271,7 @@ class SearchProductController extends Controller
         }
 
         return $type;
-      }
+    }
 
     public function getAjaxOperators(Request $request)
     {
@@ -226,9 +287,8 @@ class SearchProductController extends Controller
     //Returns the operator_sql by type of criteria
     public function getStatementType($type, $operator)
     {
-        if($type == 'string')
-        {
-          switch ($operator) {
+        if ($type == 'string') {
+            switch ($operator) {
             case 'contain':
               $operator_sql = 'LIKE ';
               break;
@@ -236,10 +296,8 @@ class SearchProductController extends Controller
               $operator_sql = 'NOT LIKE ';
               break;
           }
-        }
-        else if($type == 'integer')
-        {
-          switch ($operator) {
+        } elseif ($type == 'integer') {
+            switch ($operator) {
             case 'lt':
               $operator_sql = '<';
               break;
@@ -275,10 +333,8 @@ class SearchProductController extends Controller
             $data_json = json_decode($json, true);
 
             //Verification if img exists
-            if( ($data_json['status'] === 1) || ($data_json['status_verbose'] === 'product found') )
-            {
-                if( isset($data_json['product']['image_small_url']) )
-                {
+            if (($data_json['status'] === 1) || ($data_json['status_verbose'] === 'product found')) {
+                if (isset($data_json['product']['image_small_url'])) {
                     //Add img for this product into list products
                     $list_img['code'] = $code;
                     $list_img[$code]['img'] = $data_json['product']['image_small_url'];
