@@ -9,7 +9,23 @@
 
 {% block stylesheets %}
   <style>
-    a.btn{
+    .card-title {
+      margin-bottom: 35px;
+    }
+
+    h4 {
+      margin-top: 35px;
+      margin-bottom: 15px;
+    }
+
+    #img_product {
+      position: absolute;
+      right: 100px;
+      top: 20px;
+      box-shadow: 5px 4px 8px grey;
+    }
+
+    a.btn {
       margin-bottom: 10px;
     }
   </style>
@@ -33,6 +49,9 @@
         {% if (brand is not empty)
           or(originIngredients is not empty) %}
           <h4>Caractéristiques du produit</h4>
+          {% if img is not null %}
+            <img id="img_product" src="{{ img }}" alt="{{ product.getProductName }}" width="auto" height="auto">
+          {% endif %}
           {% if (brand is not empty) %}
             <p>
               Marque:
