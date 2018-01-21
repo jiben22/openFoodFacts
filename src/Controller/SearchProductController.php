@@ -7,9 +7,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use App\Entity\Additives;
+use App\Entity\Brands;
+use App\Entity\Countries;
+use App\Entity\Ingredients;
+use App\Entity\NutritionalInformation;
 use App\Entity\Product;
+
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class SearchProductController extends Controller
 {
@@ -83,33 +92,27 @@ class SearchProductController extends Controller
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
-        // QueryBuilder -> Just ProductName
-        if( $value == null && $tb_search[0] === '' )
-        {
-            /*
-            $qb = $em->createQueryBuilder('p')
-              ->select('p')
-              ->from('App:Product', 'p')
-              ->where('p.product_name LIKE :product_name')
-              ->setParameter('product_name', '%Crème%')
-              //->setParameter('product_name', $values_statement)
-              ->orderBy('p.product_name', 'ASC')
-              ->setMaxResults($limit)
-              ->getQuery();
-              */
-        }
-
+/*
         $qb = $em->createQueryBuilder('p')
-          ->select('p')
-          ->from('App:Product', 'p')
-          ->where('p.product_name LIKE :product_name')
-          ->setParameter('product_name', $values_statement)
-          ->orderBy('p.product_name', 'ASC')
-          ->setMaxResults($limit)
-          ->getQuery();
-        
+            ->select('p')
+            ->from('App:Product', 'p')
+            ->where('p.product_name LIKE :product_name')
+            ->setParameter('product_name', $values_statement)
+            ->orderBy('p.product_name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery();
+*/
+// We retrieve our id route parameter
+$id = 1945;
 
-          return $list_products = $qb->getResult();
+$repository = $this->getDoctrine()->getRepository(Product::class);
+$product = $repository->findOneBy(array(
+  'id' => $id
+));
+
+return $product;
+          //return $list_products = $qb->getResult();
+
     }
 
     //Return the fields added in the form to search a product

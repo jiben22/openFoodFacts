@@ -18,7 +18,6 @@ use App\Entity\Ingredients;
 use App\Entity\NutritionalInformation;
 use App\Entity\Product;
 
-
 class ModifyProductController extends Controller
 {
   public function ModifyProduct(Request $request)
