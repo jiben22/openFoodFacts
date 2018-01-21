@@ -17,9 +17,6 @@ use App\Entity\Ingredients;
 use App\Entity\NutritionalInformation;
 use App\Entity\Product;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
-
 class SearchProductController extends Controller
 {
     public function searchProduct(Request $request)
@@ -69,22 +66,21 @@ class SearchProductController extends Controller
     public function searchProducts($tb_search, $criteria, $operator, $value)
     {
         //TEST
-        var_dump($tb_search);
-        var_dump($criteria);
-        var_dump($operator);
-        var_dump($value);
-
+        //var_dump($tb_search);
+        //var_dump($criteria);
+        //var_dump($operator);
+        //var_dump($value);
 
         //split search in differents products
         //add the differents words
         $values_statement = "";
-        foreach ($tb_search as $value) {
-          $values_statement = $values_statement . '%' . $value;
+        foreach ($tb_search as $tb_value) {
+          $values_statement = $values_statement . '%' . $tb_value;
           //$values_statement = $values_statement . $value;
         }
         $values_statement = $values_statement . '%';
         //var_dump($tb_search);
-        //echo $values_statement;
+        echo $values_statement;
 
         //Limit of results
         $limit = 15;
@@ -92,7 +88,7 @@ class SearchProductController extends Controller
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
-/*
+
         $qb = $em->createQueryBuilder('p')
             ->select('p')
             ->from('App:Product', 'p')
@@ -101,18 +97,8 @@ class SearchProductController extends Controller
             ->orderBy('p.product_name', 'ASC')
             ->setMaxResults($limit)
             ->getQuery();
-*/
-// We retrieve our id route parameter
-$id = 1945;
 
-$repository = $this->getDoctrine()->getRepository(Product::class);
-$product = $repository->findOneBy(array(
-  'id' => $id
-));
-
-return $product;
-          //return $list_products = $qb->getResult();
-
+          return $list_products = $qb->getResult();
     }
 
     //Return the fields added in the form to search a product

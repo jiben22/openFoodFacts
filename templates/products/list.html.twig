@@ -26,8 +26,9 @@
 
       <!-- Page Features -->
       <div class="row text-center">
-        {% for list in list_products %}
-          {% for product in list %}
+        {# % for list in list_products % #}
+          {# % for product in list % #}
+          {% for product in list_products %}
             <a href="{{ path('app_product_information', {'id': product.getId}) }}">
               <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card">
@@ -56,7 +57,7 @@
               </div>
             </div>
           </a>
-        {% endfor %}
+        {# % endfor % #}
       {% endfor %}
 
     </div>
