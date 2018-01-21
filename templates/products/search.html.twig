@@ -65,7 +65,7 @@ $( form_criteria ).change(function() {
 
 //Retrieve the list of operators corresponding at the criteria selected
 function ajaxOperators(criteria) {
-  //console.log(criteria);
+  console.log(criteria);
   $.ajax({
     url: "{{ path('app_product_search__ajaxOperators') }}",
     type: "POST",
@@ -76,7 +76,7 @@ function ajaxOperators(criteria) {
     //console.log("done");
     //alert( data );
     //Call function to replace list of operators in the form
-    changeListOperators( data );
+    changeListOperators(data);
   })
   .fail(function () {
     //alert("fail");
@@ -87,7 +87,7 @@ function ajaxOperators(criteria) {
 function changeListOperators(list_operators)
 {
   //TEST
-  //alert(list_operators);
+  //console.log(list_operators);
   var list = list_operators;
 
   $select = $( form_operator );

@@ -21,9 +21,6 @@ class SearchProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$product` variable has also been updated
-
             //Retrieve data form Field mapped Product
             $product = $form->getData();
             $product_name = $product->getProductName();
@@ -31,9 +28,8 @@ class SearchProductController extends Controller
             $product_cap = strtolower($product_name);
             $product_cap = ucfirst($product_cap);
             $tb_search = explode(' ', $product_cap);
-
-            // We call function to make a statement
-            //$list_products = $this->search_list_products($product_cap);
+            //TEST
+            //var_dump($tb_search);
 
             //Retrieve data from field not mapped
             $criteria = $form->get("criteria")->getData();
@@ -63,8 +59,12 @@ class SearchProductController extends Controller
 
     public function searchProducts($tb_search, $criteria, $operator, $value)
     {
-        //Limit of results
-        $limit = 15;
+        //TEST
+        var_dump($tb_search);
+        var_dump($criteria);
+        var_dump($operator);
+        var_dump($value);
+
 
         //split search in differents products
         //add the differents words
@@ -77,11 +77,28 @@ class SearchProductController extends Controller
         //var_dump($tb_search);
         //echo $values_statement;
 
+        //Limit of results
+        $limit = 15;
 
         // Entity Manager
         $em = $this->getDoctrine()->getManager();
 
-        // QueryBuilder
+        // QueryBuilder -> Just ProductName
+        if( $value == null && $tb_search[0] === '' )
+        {
+            /*
+            $qb = $em->createQueryBuilder('p')
+              ->select('p')
+              ->from('App:Product', 'p')
+              ->where('p.product_name LIKE :product_name')
+              ->setParameter('product_name', '%Crème%')
+              //->setParameter('product_name', $values_statement)
+              ->orderBy('p.product_name', 'ASC')
+              ->setMaxResults($limit)
+              ->getQuery();
+              */
+        }
+
         $qb = $em->createQueryBuilder('p')
           ->select('p')
           ->from('App:Product', 'p')
@@ -90,6 +107,7 @@ class SearchProductController extends Controller
           ->orderBy('p.product_name', 'ASC')
           ->setMaxResults($limit)
           ->getQuery();
+        
 
           return $list_products = $qb->getResult();
     }
@@ -158,13 +176,11 @@ class SearchProductController extends Controller
     {
         switch ($type) {
           case 'string': $list_operators = array(
-                            null => null,
                             "Contient" => "contain",
                             "Ne contient pas" => "no_contain",
                           );
                           break;
           case 'integer': $list_operators = array(
-                            null => null,
                             "Inférieur (<)" => "lt",
                             "Inférieur ou égal (<=)" => "le",
                             "Egal (=)" => "eq",
@@ -172,12 +188,6 @@ class SearchProductController extends Controller
                             "Supérieur (>)" => "gt",
                           );
                           break;
-
-                        case 'OK':
-                        $list_operators = array(
-                                          "OK" => "OK",
-                                        );
-                                        break;
 
           default: $list_operators = array(
                             null => null,
@@ -201,19 +211,13 @@ class SearchProductController extends Controller
           case 'ingredient':
               $type = 'string';
               break;
+
           case 'fat_100g':
           case 'saturated_fat_100g':
           case 'sugars_100g':
+          case 'salt_100g':
               $type = 'integer';
               break;
-          /*
-          case null:
-              $type = 'string';
-              break;
-          default:
-              $type = 'integer';
-              break;
-          */
         }
 
         return $type;
@@ -221,16 +225,13 @@ class SearchProductController extends Controller
 
     public function getAjaxOperators(Request $request)
     {
-        //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
-        //var_dump($criteria);
         // Retrieve type of criteria
-        //$type = $this->getCriteriaType($criteria);
+        $type = $this->getCriteriaType($criteria);
         // By type of criteria, we retrieve list of operators
-        //$list_operators = $this->getOperatorsType($type);
+        $list_operators = $this->getOperatorsType($type);
 
-        //return new JsonResponse($criteria);
-        return new Response($criteria);
+        return new JsonResponse($list_operators);
     }
 
     //Returns the operator_sql by type of criteria
