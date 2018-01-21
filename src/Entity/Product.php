@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(name="code", type="bigint")
+     * @ORM\Column(name="code", type="bigint", nullable=true)
      */
     private $code;
 
@@ -68,19 +68,19 @@ class Product
     private $additives;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Brands")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Brands", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $brand;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Countries")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Countries", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $country;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Ingredients")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Ingredients", cascade={"persist"})
      */
     private $ingredients;
 

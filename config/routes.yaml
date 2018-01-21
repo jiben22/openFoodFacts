@@ -27,5 +27,7 @@ app_product_add:
     controller: App\Controller\AddProductController::AddProduct
 
 app_product_modify:
-    path: /produit/modifier
+    path: /produit/modifier/{id}
     controller: App\Controller\ModifyProductController::ModifyProduct
+    requirements:
+        page: '\d+'

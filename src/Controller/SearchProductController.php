@@ -36,26 +36,29 @@ class SearchProductController extends Controller
             //Normalization for product_name string
             $product_cap = strtolower($product_name);
             $product_cap = ucfirst($product_cap);
+            $tb_search = explode(' ', $product_cap);
 
+            // We call function to make a statement
+            //$list_products = $this->search_list_products($product_cap);
 
             //Retrieve data from field not mapped
-            //var_dump($form->getData());
             $criteria = $form->get("criteria")->getData();
-            //var_dump($criteria);
             $operator = $form->get("operator")->getData();
-            //var_dump($operator);
             $value = $form->get("value")->getData();
             //Normalization for value
             $value_cap = strtolower($value);
             $value_cap = ucfirst($value_cap);
 
             //We call function to make a statement
-            $list_products = $this->searchProducts($product_cap, $criteria, $operator, $value_cap);
+            $list_products = $this->searchProducts($tb_search, $criteria, $operator, $value_cap);
+
+            //Create list of img for products
+            $list_img = $this->getImg($list_products);
 
             //Redirection ListProductController to display list of products
             return $this->forward('App\Controller\ListProductController::listProduct', array(
               'list_products' => $list_products,
-              //'img_small' => $img_small,
+              'list_img' => $list_img,
           ));
         }
 
@@ -64,59 +67,8 @@ class SearchProductController extends Controller
       ));
     }
 
-    public function searchProducts($product, $criteria, $operator, $value)
-    {
-        //TEST
-        //var_dump($product);
-        //var_dump($criteria);
-        //var_dump($operator);
-        //var_dump($value);
-
-        // Entity Manager
-        $em = $this->getDoctrine()->getManager();
-
-        //We retrieve the entity of criteria
-        $entity = $this->getEntityCriteria($criteria);
-        //We retrieve type of criteria
-        $type = $this->getCriteriaType($criteria);
-        //We retrieve the operator sql
-        var_dump($type);
-        var_dump($operator);
-        $operator_sql = $this->getStatementType($type, $operator);
-
-        //Limit of results
-        $limit = 30;
-
-        //TEST
-        //var_dump($criteria);
-        //var_dump($operator_sql);
-        //var_dump($value);
-
-        echo("App:" . $entity . 'other');
-        echo('<br />');
-        echo('other.' . $criteria . ' ' . $operator_sql . ' \'%' . $value . '%\'');
-
-        // QueryBuilder
-        $qb = $em->createQueryBuilder('p')
-          //->select('p')
-          ->select('p', 'other')
-          ->from('App:Product', 'p')
-          //->leftJoin("App:" . $entity, 'other')
-          ->leftJoin("App:" . $entity, 'other')
-          ->where('p.product_name LIKE :product_name')
-          //->andWhere('other.brand LIKE :other')
-          //->andWhere('other.' . $criteria . ' ' . $operator_sql .)
-          ->andWhere('other.' . $criteria . ' ' . $operator_sql . ' \'%' . $value . '%\'')
-          ->setParameter('product_name', '%' . $product .'%')
-          //->setParameter('other', '%Griz%')
-          //>orderBy('p.product_name', 'ASC')
-          //->setMaxResults($limit)
-          ->getQuery();
-
-        return $list_products = $qb->getResult();
-    }
-
     //Return the fields added in the form to search a product
+    //DEV
     public function getForm()
     {
         $product = new Product();
@@ -135,7 +87,7 @@ class SearchProductController extends Controller
           ))
           ->add('operator', ChoiceType::class, array(
               'label' => false,
-              'choices' => $this->getOperatorsType('string'),
+              'choices' => $this->getOperatorsType('integer'),
               'mapped' => false,
           ))
           ->add('value', TextType::class, array(
@@ -180,11 +132,13 @@ class SearchProductController extends Controller
     {
         switch ($type) {
           case 'string': $list_operators = array(
+                            null => null,
                             "Contient" => "contain",
                             "Ne contient pas" => "no_contain",
                           );
                           break;
           case 'integer': $list_operators = array(
+                            null => null,
                             "Inférieur (<)" => "lt",
                             "Inférieur ou égal (<=)" => "le",
                             "Egal (=)" => "eq",
@@ -210,38 +164,99 @@ class SearchProductController extends Controller
         return $list_operators;
     }
 
-    public function getEntityCriteria($criteria)
-    {
-      switch ($criteria) {
-          case 'additives':
-              $entity = 'Additives';
-              break;
-          case 'brand':
-              $entity = 'Brands';
-              break;
-          case 'country_fr':
-              $entity = 'Countries';
-              break;
-          case 'ingredient':
-              $entity = 'Ingredients';
-              break;
-          case 'nutrition_grade_fr':
-          case 'fat_100g':
-          case 'saturated_fat_100g':
-          case 'sugars_100g':
-              $entity = 'NutritionalInformation';
-              break;
-          /*
-          case null:
-              $type = 'string';
-              break;
-          default:
-              $type = 'integer';
-              break;
-          */
-        }
 
-        return $entity;
+    /*
+      public function searchProducts($product_name)
+      {
+          // Entity Manager
+          $em = $this->getDoctrine()->getManager();
+
+          //Limit of results
+          $limit = 30;
+
+          // QueryBuilder
+          $qb = $em->createQueryBuilder('p')
+              ->select('p')
+              ->from('App:Product', 'p')
+              ->where('p.product_name LIKE :product_name')
+              //%*% the name of product must contents the word
+              // product_name into the row
+              ->setParameter('product_name', '%' . $product_name .'%')
+              ->orderBy('p.product_name', 'ASC')
+              //TEST
+              ->setMaxResults($limit)
+              ->getQuery();
+
+          return $list_products = $qb->getResult();
+      }*/
+
+/*
+    public function searchProducts($product, $criteria, $operator, $value)
+    {
+        $operator_sql = $this->getStatementType('integer', 'le');
+
+        //TEST
+        var_dump($operator_sql);
+//        var_dump($operator);
+
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        //$criteriaType = $this->getCriteriaType($criteria);
+
+        //Limit of results
+        $limit = 30;
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+          ->select('p')
+          ->from('App:NutritionalInformation', 'p')
+          ->where('p.fat_100g < 100')
+          //->where('p.fat_100g' . $operator_sql . $value)
+          //->setParameter('product_name', '%' . $product .'%')
+          //->orderBy('p.product_name', 'ASC')
+          ->setMaxResults($limit)
+          ->getQuery();
+
+        return $list_products = $qb->getResult();
+    }
+*/
+
+
+    public function searchProducts($tb_search, $criteria, $operator, $value)
+    {
+        //TEST
+        //var_dump($operator);
+        // Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
+        //$criteriaType = $this->getCriteriaType($criteria);
+
+        //Limit of results
+        $limit = 30;
+
+        //split search in differents products
+        //add the differents words
+        $values_statement = "";
+        foreach ($tb_search as $value) {
+          $values_statement = $values_statement . '%' . $value;
+          //$values_statement = $values_statement . $value;
+        }
+        $values_statement = $values_statement . '%';
+        //var_dump($tb_search);
+        //echo $values_statement;
+
+        // QueryBuilder
+        $qb = $em->createQueryBuilder('p')
+          ->select('p')
+          ->from('App:Product', 'p')
+          ->where('p.product_name LIKE :product_name')
+          ->setParameter('product_name', $values_statement)
+          ->orderBy('p.product_name', 'ASC')
+          ->setMaxResults($limit)
+          ->getQuery();
+
+          return $list_products = $qb->getResult();
     }
 
     //Return the type of criteria selected
@@ -277,18 +292,20 @@ class SearchProductController extends Controller
     {
         //Problem HERE ! Not retrieve POST['criteria']
         $criteria = $request->request->get('criteria');
+        //var_dump($criteria);
         // Retrieve type of criteria
-        $type = $this->getCriteriaType($criteria);
+        //$type = $this->getCriteriaType($criteria);
         // By type of criteria, we retrieve list of operators
-        $list_operators = $this->getOperatorsType($type);
+        //$list_operators = $this->getOperatorsType($type);
 
-        return new JsonResponse($list_operators);
+        //return new JsonResponse($criteria);
+        return new Response($criteria);
     }
 
     //Returns the operator_sql by type of criteria
     public function getStatementType($type, $operator)
     {
-        if($type === 'string')
+        if($type == 'string')
         {
           switch ($operator) {
             case 'contain':
@@ -299,7 +316,7 @@ class SearchProductController extends Controller
               break;
           }
         }
-        else if($type === 'integer')
+        else if($type == 'integer')
         {
           switch ($operator) {
             case 'lt':
@@ -322,13 +339,11 @@ class SearchProductController extends Controller
 
         return $operator_sql;
     }
-    //Add img foreach product contents into the result
-    //DEV
-    /*
-    public function addImgProduct()
+
+    //Add img foreach product contents into the result (if exist)
+    public function getImg($list_products)
     {
-        //TEST
-        // It's necessary to create an array for stockage for products img
+        $list_img = null;
 
         //Recover image for each product
         foreach ($list_products as $key => $product) {
@@ -338,17 +353,19 @@ class SearchProductController extends Controller
             $json = file_get_contents('https://world.openfoodfacts.org/api/v0/product/'. $code .'.json');
             $data_json = json_decode($json, true);
 
-            //TEST
-            var_dump($data_json);
-            echo '********************************************************************************************';
-
-            if (isset($data_json['product']) && isset($data_json['product']['image_front_url'])) {
-                //Recover url for img small
-                $img_small = $data_json['product']['image_front_url'];
-                //$list_products['img'] = $img_small;
-            //Boolean which woudl say if img exist or no
+            //Verification if img exists
+            if( ($data_json['status'] === 1) || ($data_json['status_verbose'] === 'product found') )
+            {
+                if( isset($data_json['product']['image_small_url']) )
+                {
+                    //Add img for this product into list products
+                    $list_img['code'] = $code;
+                    $list_img[$code]['img'] = $data_json['product']['image_small_url'];
+                }
             }
         }
+
+        //Return the list of img product with [code][img]
+        return $list_img;
     }
-    */
 }

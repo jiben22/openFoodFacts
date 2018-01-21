@@ -31,17 +31,7 @@ class AddProductController extends Controller
 
           //Retrieve data form Field mapped Product
           $data = $form->getData();
-          /*
-          $product = $data["product"];
-          $additives = $data["additives"];
-          $brand = $data["brands"];
-          $country = $data["country"];
-          $ingredients = $data["ingredients"];
-          $nutritionalInformation = $data["nutritionalInformation"];
 
-          // We ADD Product in database
-          $product_name = $this->addProductInDatabase($product, $additives, $brand, $country, $ingredients, $nutritionalInformation);
-          */
           $product_name = $this->addProductInDatabase($data);
           //We retrieve id of this product with her namer
           $id = $this->getProductId($product_name);
@@ -69,7 +59,6 @@ class AddProductController extends Controller
   //Return the fields added in the form to add a product
   public function getFormAddProduct()
   {
-
       $data = array(
         'product'  => new Product(),
         'additives' => new Additives(),

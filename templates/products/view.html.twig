@@ -16,7 +16,7 @@
 {% endblock %}
 {% block buttonsAction %}
   <!-- Jumbotron Header -->
-  <a href="{{ path('app_product_modify')}}" class="btn btn-primary btn-lg">Modifier le produit</a>
+  <a href="{{ path('app_product_modify', {'id': product.getId}) }}" class="btn btn-primary btn-lg">Modifier le produit</a>
 {% endblock %}
 {% block body %}
 
