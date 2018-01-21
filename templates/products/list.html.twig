@@ -17,7 +17,7 @@
         <h1 class="display-3">Aucun produit</h1>
         <p class="lead">
           Aucun produit ne correspond à vos critères de recherche !
-          <br \>
+          <br \="\">
           Vous pouvez effectuer une nouvelle recherche.
         </p>
         <a href="{{ path('app_product_search')}}" class="btn btn-primary btn-lg">Rechercher un nouveau produit</a>
@@ -26,9 +26,8 @@
 
       <!-- Page Features -->
       <div class="row text-center">
-          {% for product in list_products %}
-          {# TEST #}
-          {#{ product.getCode }#}
+        {% for list in list_products %}
+          {% for product in list %}
             <a href="{{ path('app_product_information', {'id': product.getId}) }}">
               <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card">
@@ -58,11 +57,12 @@
             </div>
           </a>
         {% endfor %}
+      {% endfor %}
 
-      </div>
-      <!-- /.row -->
-    {% endif %}
+    </div>
+    <!-- /.row -->
+  {% endif %}
 
-  </div>
-  <!-- /.col-lg-9 -->
+</div>
+<!-- /.col-lg-9 -->
 {% endblock %}

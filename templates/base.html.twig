@@ -6,7 +6,7 @@
     <meta name="description" content="OpenFoodFacts est une application permettant de connaître toutes les informations
         nutrinitionnelles sur un produit mais elle permet aussi de contribuer à ajouter de noveaux produits">
     <meta name="author" content="Benjamin LE GALLO - Thomas GUNEPIN">
-    <link rel="icon" type="image/png" href="{{ asset('img/icon.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('img/icon.png') }}"/>
     <title>
       {% block title %}OpenFoodFacts{% endblock %}
     </title>
@@ -27,7 +27,10 @@
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
               <a class="nav-link" href="{{ path('app_product_search')}}">Chercher un produit
-                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ path('app_product_add')}}">Ajouter un produit
               </a>
             </li>
             <li class="nav-item">
@@ -50,7 +53,7 @@
       <div class="row">
 
         <div class="col-lg-3">
-          <h1 class="my-4" >
+          <h1 class="my-4">
             <a href="{{ path('app_home')}}">
               <img src="{{ asset('img/logo_black-openFoodFacts.svg') }}" alt="openFoodFacts" width="182" height="126"/>
             </a>
@@ -65,11 +68,12 @@
           <p class="card-text">
             Open Food Facts répertorie les produits alimentaires du monde entier.
           </p>
-          <div class="card mt-4">
-            <h4>Ajouter un produit</h4>
-            <h4>Se connecter</h4>
+
+          <!-- Jumbotron Header -->
+          <a href="{{ path('app_product_add')}}" class="btn btn-primary btn-lg">Ajouter un produit</a>
+          {% block buttonsAction %}
+          {% endblock %}
           </div>
-        </div>
         <!-- /.col-lg-3 -->
 
         {% block body %}{% endblock %}
@@ -91,10 +95,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js"></script>
-    <script
-			  src="https://code.jquery.com/jquery-3.2.1.min.js"
-			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-			  crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/gulpfile.js') }}"></script>
     {% block javascripts %}{% endblock %}
   </body>
