@@ -6,7 +6,7 @@
 
 app_home:
   path: /
-  controller: App\Controller\SearchProductController::searchProduct
+  controller: App\Controller\HomeProductController::homeProduct
 
 app_product_information:
     path: /produit/information/{id}
