@@ -277,7 +277,7 @@ class Product
      */
     public function addAdditive(Additives $additive)
     {
-      $this->additives[] = $additive;
+      $this->additives[0] = $additive;
     }
 
     /**
@@ -341,7 +341,7 @@ class Product
      */
     public function addIngredient(Ingredients $ingredient)
     {
-      $this->ingredients[] = $ingredient;
+      $this->ingredients[0] = $ingredient;
     }
 
     /**

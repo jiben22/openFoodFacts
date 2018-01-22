@@ -40,6 +40,8 @@ class SearchProductController extends Controller
             //Retrieve data from field not mapped
             $criteria = $form->get("criteria")->getData();
             $operator = $form->get("operator")->getData();
+            //TEST
+            //var_dump ($operator);
             $value = $form->get("value")->getData();
             //Normalization for value
             $value_cap = strtolower($value);
@@ -95,7 +97,7 @@ class SearchProductController extends Controller
             $max = 20849;
             $offset = rand($min, $max);
 
-            echo "Aucun champ de rempli";
+            //echo "Aucun champ de rempli";
             $qb = $em->createQueryBuilder('All_empty')
             ->select('p')
             ->from('App:Product', 'p')
@@ -106,7 +108,7 @@ class SearchProductController extends Controller
         }
         //If value is null
         elseif ($value == null) {
-            echo "Value = null";
+            //echo "Value = null";
             $qb = $em->createQueryBuilder('value_null')
             ->select('p')
             ->from('App:Product', 'p')
@@ -118,7 +120,7 @@ class SearchProductController extends Controller
         }
         //product_name of value (criteria) is not empty !
         else {
-            echo "Tout rempli !";
+            //echo "Tout rempli !";
             //Recover entity for this criteria
             $entity = $this->getEntity($criteria);
             //Recover type of criteria for the statement
@@ -127,19 +129,44 @@ class SearchProductController extends Controller
 
             //Recover operator sql !
             $operator_sql = $this->getStatementType($type, $operator);
-            echo 'criteria.' .$criteria . ' ' .$operator_sql . '%'.$value.'%';
+            //echo 'criteria.' .$criteria . ' ' .$operator_sql . '%'.$value.'%';
 
-            $qb = $em->createQueryBuilder('nothing_empty')
-              ->select('p')
-              ->from('App:Product', 'p')
-              ->innerJoin('App:' . $entity, 'criteria')
-              ->where('p.product_name LIKE :product_name')
-              ->andWhere('criteria.' .$criteria . ' ' .$operator_sql . ':value')
-              ->setParameter('product_name', $values_statement)
-              ->setParameter('value', '%'.$value.'%')
-              ->orderBy('p.product_name', 'ASC')
-              ->setMaxResults($limit)
-              ->getQuery();
+            if($type === 'integer')
+            {
+              $qb = $em->createQueryBuilder('nothing_empty')
+                ->select('p')
+                ->from('App:Product', 'p')
+                ->innerJoin('App:' . $entity, 'criteria')
+                ->where('p.product_name LIKE :product_name')
+                ->andWhere('criteria.' .$criteria . ' ' .$operator_sql . ':value')
+                ->setParameter('product_name', $values_statement)
+                ->setParameter('value', $value)
+                ->orderBy('p.product_name', 'ASC')
+                ->setMaxResults($limit)
+                ->getQuery();
+            }
+            else
+            {
+              $tab_val_criteria = explode(' ', $value);
+              $value_criteria = "";
+              foreach ($tab_val_criteria as $val) {
+                  $value_criteria = $value_criteria . '%' . $val;
+                  //var_dump($value_criteria);
+              }
+              $value_criteria = $value_criteria . '%';
+
+              $qb = $em->createQueryBuilder('nothing_empty')
+                ->select('p')
+                ->from('App:Product', 'p')
+                ->innerJoin('App:' . $entity, 'criteria')
+                ->where('p.product_name LIKE :product_name')
+                ->andWhere('criteria.' .$criteria . ' ' .$operator_sql . ':value')
+                ->setParameter('product_name', $values_statement)
+                ->setParameter('value', '%'.$value.'%')
+                ->orderBy('p.product_name', 'ASC')
+                ->setMaxResults($limit)
+                ->getQuery();
+            }
         }
 
         return $list_products = $qb->getResult();
@@ -323,6 +350,9 @@ class SearchProductController extends Controller
               break;
             case 'gt':
               $operator_sql = '>';
+              break;
+            default:
+              $operator_sql = '<';
               break;
           }
         }
