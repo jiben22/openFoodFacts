@@ -118,18 +118,28 @@ class SearchProductController extends Controller
         }
         //product_name of value (criteria) is not empty !
         else {
+            echo "Tout rempli !";
             //Recover entity for this criteria
             $entity = $this->getEntity($criteria);
+            //Recover type of criteria for the statement
+            $type = $this->getCriteriaType($criteria);
+            //echo "OPÉRATEUR: " .$operator;
 
-          $qb = $em->createQueryBuilder('nothing_empty')
-            ->select('p')
-            ->from('App:Product', 'p')
-            ->innerJoin('App:' . $entity, 'criteria')
-            ->andWhere('p.product_name LIKE :product_name')
-            ->setParameter('product_name', $values_statement)
-            ->orderBy('p.product_name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery();
+            //Recover operator sql !
+            $operator_sql = $this->getStatementType($type, $operator);
+            echo 'criteria.' .$criteria . ' ' .$operator_sql . '%'.$value.'%';
+
+            $qb = $em->createQueryBuilder('nothing_empty')
+              ->select('p')
+              ->from('App:Product', 'p')
+              ->innerJoin('App:' . $entity, 'criteria')
+              ->where('p.product_name LIKE :product_name')
+              ->andWhere('criteria.' .$criteria . ' ' .$operator_sql . ':value')
+              ->setParameter('product_name', $values_statement)
+              ->setParameter('value', '%'.$value.'%')
+              ->orderBy('p.product_name', 'ASC')
+              ->setMaxResults($limit)
+              ->getQuery();
         }
 
         return $list_products = $qb->getResult();
@@ -238,13 +248,14 @@ class SearchProductController extends Controller
                             "Supérieur (>)" => "gt",
                           );
                           break;
-
+          /*
           default: $list_operators = array(
                             null => null,
                             "Contient" => "contain",
                             "Ne contient pas" => "no_contain",
                           );
                           break;
+          */
         }
 
         return $list_operators;
@@ -296,7 +307,7 @@ class SearchProductController extends Controller
               $operator_sql = 'NOT LIKE ';
               break;
           }
-        } elseif ($type == 'integer') {
+        } else if ($type == 'integer') {
             switch ($operator) {
             case 'lt':
               $operator_sql = '<';
